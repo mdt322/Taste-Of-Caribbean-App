@@ -30,6 +30,7 @@ Taste of Caribbean is a mobile food ordering application built with React Native
    
 3. Proceed to the Expo Go and scan the QR code generated in the terminal
 
+
 **Note:** Make sure to check `package.json` and `package-lock.json` to ensure the dependencies are updated.
 
 ### Project Structure
