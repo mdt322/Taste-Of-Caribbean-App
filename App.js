@@ -48,6 +48,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* App screen content */}
       <View style={styles.content}>
         {activeTab === 'Menu' ? (
           <Menu addToCart={addToCart} />
@@ -64,6 +65,7 @@ export default function App() {
           />
         )}
       </View>
+      {/* Footer tabs */}
       <View style={styles.tabBar}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
@@ -76,10 +78,17 @@ export default function App() {
         <TouchableOpacity
           style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
           onPress={() => setActiveTab('OrderSummary')}
-          disabled={cart.length === 0}
+          // disabled={cart.length === 0}
         >
           <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
             Cart {cart.length > 0 && `(${cart.length})`}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab]}
+        >
+          <Text style={[styles.tabText]}>
+            Profile
           </Text>
         </TouchableOpacity>
       </View>
@@ -103,7 +112,7 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 20,
     alignItems: 'center',
   },
   activeTab: {
@@ -111,7 +120,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#ffb300',
   },
   tabText: {
-    fontSize: 14,
+    fontSize: 18,
     color: '#666',
   },
   activeTabText: {
