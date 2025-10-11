@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+//import { SafeAreaView } from 'react-native';
 import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
 
@@ -47,7 +49,7 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
       {/* App screen content */}
       <View style={styles.content}>
         {activeTab === 'Menu' ? (
@@ -92,7 +94,7 @@ export default function App() {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
