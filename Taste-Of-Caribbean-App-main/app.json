@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Taste of Caribbean",
+    "slug": "taste-of-caribbean-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/Logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.TasteoftheCaribbean.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.TasteoftheCaribbean.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "sdkVersion": "53.0.0",
+    "newArchEnabled": true,
+    "extra": {
+      "REACT_APP_FIREBASE_API_KEY": "AIzaSyAmkDZCwY9d-wmkhUZ9kKexUsHqHrD7FBU",
+      "REACT_APP_FIREBASE_AUTH_DOMAIN": "toc-menu-data-a9057.firebaseapp.com",
+      "REACT_APP_FIREBASE_PROJECT_ID": "toc-menu-data-a9057",
+      "REACT_APP_FIREBASE_STORAGE_BUCKET": "toc-menu-data-a9057.firebasestorage.app",
+      "REACT_APP_FIREBASE_MESSAGING_SENDER_ID": "662049114449",
+      "REACT_APP_FIREBASE_APP_ID": "1:662049114449:web:104512bcb14005aa896b70"
+    }
+  }
+}
