@@ -28,7 +28,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "sdkVersion": "53.0.0",
+    "sdkVersion": "54.0.0",
     "newArchEnabled": true,
     "extra": {
       "REACT_APP_FIREBASE_API_KEY": "AIzaSyAmkDZCwY9d-wmkhUZ9kKexUsHqHrD7FBU",
