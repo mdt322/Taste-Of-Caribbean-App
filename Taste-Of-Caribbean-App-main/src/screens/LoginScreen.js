@@ -46,7 +46,7 @@ export default function LoginScreen({ navigation }) {
       <Button title="Login" onPress={handleLogin} containerStyle={{ width: "100%" }} />
       <Button
         title="Don't have an account? Register"
-        type="clear"
+        type="clear"git config --system core.longpaths true 
         onPress={() => navigation.navigate("Register")}
       />
     </View>
