@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 
-const SignIn = ({ setSigninFlag }) => {
+const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     return (
@@ -33,7 +33,7 @@ const SignIn = ({ setSigninFlag }) => {
                         Sign In
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setSigninFlag(false)}>
+                <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setAuthFlag(false)}>
                     <Text style={styles.buttonText}>
                         Cancel
                     </Text>
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default SignIn;
+export default AuthModal;

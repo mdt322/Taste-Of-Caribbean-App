@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Profile = ( {setSigninFlag} ) => {
+const Profile = ( {setAuthFlag} ) => {
     return (
         <View style={styles.container}>
 
@@ -24,7 +24,7 @@ const Profile = ( {setSigninFlag} ) => {
             <View>
                 <TouchableOpacity 
                     style={[styles.button, styles.signInButton]}
-                    onPress={() => setSigninFlag(true)}
+                    onPress={() => setAuthFlag(true)}
                     >
                     <Text style={styles.buttonText}>Sign In</Text>
                 </TouchableOpacity>

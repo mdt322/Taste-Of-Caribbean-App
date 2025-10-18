@@ -5,12 +5,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
 import Profile from './src/components/profile/Profile';
-import SignIn from './src/screens/SignIn';
+import AuthModal from './src/components/authmodal/AuthModal';
 
 export default function App() {
   const [cart, setCart] = useState([]);
   const [activeTab, setActiveTab] = useState('Menu');
-  const [signinFlag, setSigninFlag] = useState(false);
+  const [authFlag, setAuthFlag] = useState(false);
+  const [authMode, setAuthMode] = useState('signin');
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -67,7 +68,7 @@ export default function App() {
             }}
           />
         case 'Profile':
-          return <Profile setSigninFlag={setSigninFlag} />
+          return <Profile setAuthFlag={setAuthFlag} />
     };
   };
 
@@ -76,11 +77,14 @@ export default function App() {
       {/* App screen content */}
 
       <Modal
-        visible={signinFlag}
+        visible={authFlag}
         animationType="slide"
-        // onRequestClose={() => setSigninFlag(false)}
       >
-          <SignIn setSigninFlag={setSigninFlag} />
+          <AuthModal 
+            setAuthFlag={setAuthFlag}
+            authMode={authMode}
+            setAuthMode={setAuthMode}
+          />
       </Modal> 
      
 
@@ -175,11 +179,11 @@ const styles = StyleSheet.create({
     color: '#ffb300',
     fontWeight: '500',
   },
-  signinContainer: {
-    flex: 1,
-    alignItems: 'center',
-    position: 'absolute',
-    backgroundColor: '#ffffff',
-    zIndex:10,
-  }
+  // signinContainer: {
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   position: 'absolute',
+  //   backgroundColor: '#ffffff',
+  //   zIndex:10,
+  // }
 });
