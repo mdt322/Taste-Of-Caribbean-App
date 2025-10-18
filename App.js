@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 //import { SafeAreaView } from 'react-native';
 import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
 import Profile from './src/components/profile/Profile';
+import SignIn from './src/screens/SignIn';
 
 export default function App() {
   const [cart, setCart] = useState([]);
   const [activeTab, setActiveTab] = useState('Menu');
+  const [signinFlag, setSigninFlag] = useState(false);
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -65,13 +67,29 @@ export default function App() {
             }}
           />
         case 'Profile':
-          return <Profile />
+          return <Profile setSigninFlag={setSigninFlag} />
     };
   };
 
   return (
     <SafeAreaProvider style={styles.container}>
       {/* App screen content */}
+
+      <Modal
+        visible={signinFlag}
+        animationType="slide"
+        // onRequestClose={() => setSigninFlag(false)}
+      >
+          <SignIn setSigninFlag={setSigninFlag} />
+      </Modal> 
+     
+
+      {/* { signinFlag && 
+      <View style={styles.signinContainer}>
+        <SignIn setSigninFlag={setSigninFlag} />
+      </View>
+      } */}
+
       <View style={styles.content}>
         
         {/* Old render page view */}
@@ -157,4 +175,11 @@ const styles = StyleSheet.create({
     color: '#ffb300',
     fontWeight: '500',
   },
+  signinContainer: {
+    flex: 1,
+    alignItems: 'center',
+    position: 'absolute',
+    backgroundColor: '#ffffff',
+    zIndex:10,
+  }
 });
