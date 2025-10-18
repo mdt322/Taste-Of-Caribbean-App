@@ -68,9 +68,7 @@ export default function App() {
             }}
           />
         case 'Profile':
-          return <Profile 
-            setAuthFlag={setAuthFlag}
-            setAuthMode={setAuthMode} />
+          return <Profile setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
     };
   };
 
