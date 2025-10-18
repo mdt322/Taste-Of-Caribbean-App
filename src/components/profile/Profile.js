@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Profile = ( {setAuthFlag} ) => {
+const Profile = ( {setAuthFlag, setAuthMode} ) => {
+    const setToRegister = () =>{
+        setAuthFlag(true);
+        setAuthMode('Register');
+    }
+
     return (
         <View style={styles.container}>
 
@@ -31,7 +36,9 @@ const Profile = ( {setAuthFlag} ) => {
 
                 <View style={styles.header3}>
                     <Text style={styles.title3}>Don't have an account? </Text>
-                    <TouchableOpacity> 
+                    <TouchableOpacity
+                        onPress={() => setToRegister()}
+                        > 
                         <Text style={styles.registerText}>
                             Click here to register!
                         </Text>

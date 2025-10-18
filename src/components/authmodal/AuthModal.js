@@ -4,42 +4,116 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const renderContent = () => {
+        switch (authMode) {
+
+            case ('Sign In'):
+                return (
+                    <View style={styles.container}>
+                        <View style={styles.header}>
+                            <Text style={styles.title}>Sign In</Text>
+                        </View>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.infoText}>
+                                Email:
+                            </Text>
+                            <TextInput
+                                value={email}
+                                onChange={(setEmail)}
+                                style={styles.input}
+                            />
+                            <Text style={styles.infoText}>
+                                Password:
+                            </Text>
+                            <TextInput
+                                value={password}
+                                onChange={(setPassword)}
+                                style={styles.input}
+                            />
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={[styles.button, styles.signinButton]}>
+                                <Text style={styles.buttonText}>
+                                    Sign In
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setAuthFlag(false)}>
+                                <Text style={styles.buttonText}>
+                                    Cancel
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                );
+            
+            case('Register'):
+                return (
+                    <View style={styles.container}>
+                        <View style={styles.header}>
+                            <Text style={styles.title}>Register</Text>
+                        </View>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.infoText}>
+                                Name:
+                            </Text>
+                            <TextInput
+                                value={password}
+                                onChange={(setPassword)}
+                                style={styles.input}
+                            />
+                            <Text style={styles.infoText}>
+                                Email:
+                            </Text>
+                            <TextInput
+                                value={email}
+                                onChange={(setEmail)}
+                                style={styles.input}
+                            />
+                            <Text style={styles.infoText}>
+                                Phone (optional):
+                            </Text>
+                            <TextInput
+                                value={password}
+                                onChange={(setPassword)}
+                                style={styles.input}
+                            />
+                            <Text style={styles.infoText}>
+                                Password:
+                            </Text>
+                            <TextInput
+                                value={password}
+                                onChange={(setPassword)}
+                                style={styles.input}
+                            />
+                            <Text style={styles.infoText}>
+                                Confirm Password:
+                            </Text>
+                            <TextInput
+                                value={password}
+                                onChange={(setPassword)}
+                                style={styles.input}
+                            />
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={[styles.button, styles.registerButton]}>
+                                <Text style={styles.buttonText}>
+                                    Register
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setAuthMode('Sign In')}>
+                                <Text style={styles.buttonText}>
+                                    Cancel
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                );
+        }
+    }
+
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Sign In</Text>
-            </View>
-            <View style={styles.infoContainer}>
-                <Text style={styles.infoText}>
-                    Email:
-                </Text>
-                <TextInput
-                    value={email}
-                    onChange={(setEmail)}
-                    style={styles.input}
-                />
-                <Text style={styles.infoText}>
-                    Password:
-                </Text>
-                <TextInput
-                    value={password}
-                    onChange={(setPassword)}
-                    style={styles.input}
-                />
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, styles.signinButton]}>
-                    <Text style={styles.buttonText}>
-                        Sign In
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setAuthFlag(false)}>
-                    <Text style={styles.buttonText}>
-                        Cancel
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        <>{renderContent()}</>
     )
 };
 
@@ -59,11 +133,11 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
     },
-    infoContainer:{
+    infoContainer: {
         marginVertical: 35,
         marginHorizontal: 30,
     },
-    infoText:{
+    infoText: {
         fontSize: 13,
     },
     input: {
@@ -80,7 +154,7 @@ const styles = StyleSheet.create({
     button: {
         width: 150,
         paddingVertical: 14,
-        marginHorizontal: 'auto', 
+        marginHorizontal: 'auto',
         borderRadius: 20,
         alignItems: 'center',
         marginHorizontal: 8,
@@ -92,6 +166,9 @@ const styles = StyleSheet.create({
     },
     signinButton: {
         backgroundColor: '#0779bbff',
+    },
+    registerButton:{
+        backgroundColor: '#00d346ff',
     },
     cancelButton: {
         backgroundColor: '#9e9d9dff',

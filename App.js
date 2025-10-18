@@ -11,7 +11,7 @@ export default function App() {
   const [cart, setCart] = useState([]);
   const [activeTab, setActiveTab] = useState('Menu');
   const [authFlag, setAuthFlag] = useState(false);
-  const [authMode, setAuthMode] = useState('signin');
+  const [authMode, setAuthMode] = useState('Sign In');
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -68,7 +68,9 @@ export default function App() {
             }}
           />
         case 'Profile':
-          return <Profile setAuthFlag={setAuthFlag} />
+          return <Profile 
+            setAuthFlag={setAuthFlag}
+            setAuthMode={setAuthMode} />
     };
   };
 
