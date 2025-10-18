@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 //import { SafeAreaView } from 'react-native';
 import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
+import Profile from './src/components/profile/Profile';
 
 export default function App() {
   const [cart, setCart] = useState([]);
@@ -48,11 +49,33 @@ export default function App() {
     };
   };
 
+  const renderPage = () => {
+    switch (activeTab) {
+      case 'Menu':
+        return <Menu addToCart={addToCart} />
+      case 'OrderSummary':
+        return <CartScreen
+            cart={cart}
+            {...calculateTotal()}
+            onIncrease={(id) => updateQuantity(id, 1)}
+            onDecrease={(id) => updateQuantity(id, -1)}
+            onOrderComplete={() => {
+              setCart([]);
+              setActiveTab('Menu');
+            }}
+          />
+        case 'Profile':
+          return <Profile />
+    };
+  };
+
   return (
     <SafeAreaProvider style={styles.container}>
       {/* App screen content */}
       <View style={styles.content}>
-        {activeTab === 'Menu' ? (
+        
+        {/* Old render page view */}
+        {/* {activeTab === 'Menu' ? (
           <Menu addToCart={addToCart} />
         ) : (
           <CartScreen
@@ -65,7 +88,11 @@ export default function App() {
               setActiveTab('Menu');
             }}
           />
-        )}
+        )} */}
+
+      {/* New way to render pages, needed for more than 2 pages */}
+      <>{renderPage()}</>
+
       </View>
       {/* Footer tabs */}
       <View style={styles.tabBar}>
@@ -86,10 +113,11 @@ export default function App() {
             Cart {cart.length > 0 && `(${cart.length})`}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab]}
+        <TouchableOpacity 
+          style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
+          onPress={() => setActiveTab('Profile')}
         >
-          <Text style={[styles.tabText]}>
+          <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
             Profile
           </Text>
         </TouchableOpacity>
