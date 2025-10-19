@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
+// import { signInWithEmailAndPassword } from 'firebase/auth';
+// import { auth } from '../config/firebase';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ setAuthFlag, setAuthMode }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
+  // const handleLogin = async () => {
+  //   if (!email || !password) {
+  //     Alert.alert('Error', 'Please fill in all fields');
+  //     return;
+  //   }
 
-    try {
-      setLoading(true);
-      await signInWithEmailAndPassword(auth, email, password);
-      // Navigation handled by auth state change listener in App.js
-    } catch (error) {
-      Alert.alert('Login Failed', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     setLoading(true);
+  //     await signInWithEmailAndPassword(auth, email, password);
+  //     // Navigation handled by auth state change listener in App.js
+  //   } catch (error) {
+  //     Alert.alert('Login Failed', error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
 
       <TouchableOpacity 
         style={styles.button} 
-        onPress={handleLogin}
+        // onPress={handleLogin}
         disabled={loading}
       >
         <Text style={styles.buttonText}>
@@ -56,7 +56,20 @@ const LoginScreen = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+      <TouchableOpacity 
+        style={[styles.button, styles.close]} 
+        onPress={() => setAuthFlag(false)}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          Close
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        // onPress={() => navigation.navigate('Register')}
+        onPress={() => setAuthMode('Register')}
+        >
         <Text style={styles.linkText}>
           Don't have an account? Sign up
         </Text>
@@ -100,6 +113,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  close: {
+    backgroundColor: '#b1b1b1ff',
   },
   linkText: {
     color: '#3498db',

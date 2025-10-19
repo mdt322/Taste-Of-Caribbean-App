@@ -76,6 +76,7 @@ export default function App() {
     <SafeAreaProvider style={styles.container}>
       {/* App screen content */}
 
+    {/* Pop up for sign in and registration */}
       <Modal
         visible={authFlag}
         animationType="slide"

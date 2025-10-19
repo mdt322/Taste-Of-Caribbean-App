@@ -4,22 +4,18 @@ import LoginScreen from '../../screens/LoginScreen';
 import RegisterScreen from '../../screens/RegisterScreen'
 
 const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [password, setPassword] = useState('');
 
     const renderContent = () => {
         switch (authMode) {
 
             case ('Sign In'):
                 return (
-                    <LoginScreen />
+                    <LoginScreen setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
                 );
 
             case ('Register'):
                 return (
-                    <RegisterScreen />
+                    <RegisterScreen setAuthMode={setAuthMode} />
                 );
         }
     }

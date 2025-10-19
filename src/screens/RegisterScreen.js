@@ -1,40 +1,40 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../config/firebase';
+// import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+// import { auth } from '../config/firebase';
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({ setAuthMode }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
+  // const handleRegister = async () => {
+  //   if (!name || !email || !password || !confirmPassword) {
+  //     Alert.alert('Error', 'Please fill in all fields');
+  //     return;
+  //   }
 
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
+  //   if (password !== confirmPassword) {
+  //     Alert.alert('Error', 'Passwords do not match');
+  //     return;
+  //   }
 
-    try {
-      setLoading(true);
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+  //   try {
+  //     setLoading(true);
+  //     const { user } = await createUserWithEmailAndPassword(auth, email, password);
       
-      // Update user profile with display name
-      await updateProfile(user, { displayName: name });
+  //     // Update user profile with display name
+  //     await updateProfile(user, { displayName: name });
       
-      // Navigation handled by auth state change listener in App.js
-    } catch (error) {
-      Alert.alert('Registration Failed', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     // Navigation handled by auth state change listener in App.js
+  //   } catch (error) {
+  //     Alert.alert('Registration Failed', error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -74,7 +74,7 @@ const RegisterScreen = ({ navigation }) => {
 
       <TouchableOpacity 
         style={styles.button} 
-        onPress={handleRegister}
+        // onPress={handleRegister}
         disabled={loading}
       >
         <Text style={styles.buttonText}>
@@ -82,7 +82,10 @@ const RegisterScreen = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity 
+        // onPress={() => navigation.navigate('Login')}
+        onPress={() => setAuthMode('Sign In')}
+      >
         <Text style={styles.linkText}>
           Already have an account? Sign in
         </Text>
