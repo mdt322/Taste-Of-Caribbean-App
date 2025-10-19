@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import LoginScreen from '../../screens/LoginScreen';
+import RegisterScreen from '../../screens/RegisterScreen'
 
 const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
     const [name, setName] = useState('');
@@ -12,135 +14,12 @@ const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
 
             case ('Sign In'):
                 return (
-                    <View style={styles.container}>
-                        <View style={styles.header}>
-                            <Text style={styles.title}>Sign In</Text>
-                        </View>
-                        <View style={styles.infoContainer}>
-
-                            {/* Email entry */}
-                            <Text style={styles.infoText}>
-                                Email:
-                            </Text>
-                            <TextInput
-                                value={email}
-                                onChange={(setEmail)}
-                                style={styles.input}
-                            />
-
-                            {/* Password entry */}
-                            <Text style={styles.infoText}>
-                                Password:
-                            </Text>
-                            <TextInput
-                                value={password}
-                                onChange={(setPassword)}
-                                style={styles.input}
-                            />
-
-                        </View>
-
-                        {/* Buttons */}
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={[styles.button, styles.signinButton]}>
-                                <Text style={styles.buttonText}>
-                                    Sign In
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setAuthFlag(false)}>
-                                <Text style={styles.buttonText}>
-                                    Cancel
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        {/* Footer banner */}
-                        <View style={styles.header3}>
-                            <Text style={styles.title3}>Don't have an account? </Text>
-                            <TouchableOpacity
-                                onPress={() => setAuthMode('Register')}
-                            >
-                                <Text style={styles.registerText}>
-                                    Click here to register!
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    <LoginScreen />
                 );
 
             case ('Register'):
                 return (
-                    <View style={styles.container}>
-                        <View style={styles.header}>
-                            <Text style={styles.title}>Register</Text>
-                        </View>
-                        <View style={styles.infoContainer}>
-
-                            {/* Name entry */}
-                            <Text style={styles.infoText}>
-                                Name:
-                            </Text>
-                            <TextInput
-                                value={name}
-                                onChange={(setName)}
-                                style={styles.input}
-                            />
-
-                            {/* Email entry */}
-                            <Text style={styles.infoText}>
-                                Email:
-                            </Text>
-                            <TextInput
-                                value={email}
-                                onChange={(setEmail)}
-                                style={styles.input}
-                            />
-
-                            {/* Phone entry */}
-                            <Text style={styles.infoText}>
-                                Phone (optional):
-                            </Text>
-                            <TextInput
-                                value={phone}
-                                onChange={(setPhone)}
-                                style={styles.input}
-                            />
-
-                            {/* Password entry */}
-                            <Text style={styles.infoText}>
-                                Password:
-                            </Text>
-                            <TextInput
-                                value={password}
-                                onChange={(setPassword)}
-                                style={styles.input}
-                            />
-
-                            {/* Confirm Password entry */}
-                            <Text style={styles.infoText}>
-                                Confirm Password:
-                            </Text>
-                            <TextInput
-                                value={password}
-                                onChange={(setPassword)}
-                                style={styles.input}
-                            />
-
-                        </View>
-
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={[styles.button, styles.registerButton]}>
-                                <Text style={styles.buttonText}>
-                                    Register
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setAuthMode('Sign In')}>
-                                <Text style={styles.buttonText}>
-                                    Cancel
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    <RegisterScreen />
                 );
         }
     }
