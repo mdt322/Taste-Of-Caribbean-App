@@ -95,44 +95,49 @@ export default function App() {
         />
       </Modal>
 
-      {/* Renders Menu, Cart, or Profile page, can add more if needed */}
-      <View style={styles.content}>
-        <>{renderPage()}</>
-      </View>
+      <SafeAreaView style={styles.appContainer}>
+        {/* Renders Menu, Cart, or Profile page, can add more if needed */}
+        <View style={styles.content}>
+          <>{renderPage()}</>
+        </View>
 
-      {/* Footer tabs */}
-      <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
-          onPress={() => setActiveTab('Menu')}
-        >
-          <Text style={[styles.tabText, activeTab === 'Menu' && styles.activeTabText]}>
-            Menu
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
-          onPress={() => setActiveTab('OrderSummary')}
-        // disabled={cart.length === 0}
-        >
-          <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
-            Cart {cart.length > 0 && `(${cart.length})`}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
-          onPress={() => setActiveTab('Profile')}
-        >
-          <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
-            Profile
-          </Text>
-        </TouchableOpacity>
-      </View>
+        {/* Footer tabs */}
+        <View style={styles.tabBar}>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
+            onPress={() => setActiveTab('Menu')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Menu' && styles.activeTabText]}>
+              Menu
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
+            onPress={() => setActiveTab('OrderSummary')}
+          // disabled={cart.length === 0}
+          >
+            <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
+              Cart {cart.length > 0 && `(${cart.length})`}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
+            onPress={() => setActiveTab('Profile')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
+              Profile
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -143,20 +148,21 @@ const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
     borderTopWidth: 1,
+    height: 65,
     borderTopColor: '#eee',
     backgroundColor: '#fff',
   },
   tab: {
     flex: 1,
-    paddingVertical: 20,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   activeTab: {
     borderTopWidth: 2,
     borderTopColor: '#ffb300',
   },
   tabText: {
-    fontSize: 18,
+    fontSize: 20,
     color: '#666',
   },
   activeTabText: {

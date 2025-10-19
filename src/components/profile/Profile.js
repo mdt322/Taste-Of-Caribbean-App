@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Profile = ( {setAuthFlag, setAuthMode} ) => {
-    const setToRegister = () =>{
+const Profile = ({ setAuthFlag, setAuthMode }) => {
+    const setToRegister = () => {
         setAuthFlag(true);
         setAuthMode('Register');
     }
@@ -27,10 +27,10 @@ const Profile = ( {setAuthFlag, setAuthMode} ) => {
 
             {/* Button container for signing in and registering */}
             <View>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={[styles.button, styles.signInButton]}
                     onPress={() => setAuthFlag(true)}
-                    >
+                >
                     <Text style={styles.buttonText}>Sign In</Text>
                 </TouchableOpacity>
 
@@ -38,7 +38,7 @@ const Profile = ( {setAuthFlag, setAuthMode} ) => {
                     <Text style={styles.title3}>Don't have an account? </Text>
                     <TouchableOpacity
                         onPress={() => setToRegister()}
-                        > 
+                    >
                         <Text style={styles.registerText}>
                             Click here to register!
                         </Text>
@@ -67,22 +67,22 @@ const styles = StyleSheet.create({
     },
     header2: {
         marginHorizontal: 'auto',
-        marginTop: 15,
+        marginVertical: 25,
     },
-    title2:{
+    title2: {
         fontSize: 20,
         fontWeight: 'bold',
     },
-    header3:{
+    header3: {
         flexDirection: 'row',
         marginHorizontal: 'auto',
-        marginTop: 15,
+        marginTop: 13,
     },
     title3: {
-        fontSize: 12,
+        fontSize: 14,
     },
     registerText: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#007de4ff',
     },
     summary: {
@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
         width: 350,
         padding: 20,
         marginHorizontal: 'auto',
-        marginTop: 15,
         borderRadius: 20,
         backgroundColor: '#ccccccff',
         alignItems: 'center',
@@ -100,8 +99,8 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 230,
-        paddingVertical: 18,
-        marginHorizontal: 'auto', 
+        paddingVertical: 20,
+        marginHorizontal: 'auto',
         borderRadius: 20,
         alignItems: 'center',
     },
