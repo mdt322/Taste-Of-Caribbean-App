@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'reac
 // import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 // import { auth } from '../config/firebase';
 
-const RegisterScreen = ({ setAuthMode }) => {
+const RegisterScreen = ({ setAuthFlag, setAuthMode }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -73,7 +73,7 @@ const RegisterScreen = ({ setAuthMode }) => {
       />
 
       <TouchableOpacity 
-        style={styles.button} 
+        style={[styles.button, styles.buttonCreateAccount]} 
         // onPress={handleRegister}
         disabled={loading}
       >
@@ -130,6 +130,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  buttonCreateAccount: {
+    backgroundColor: '#13962fff',
   },
   linkText: {
     color: '#3498db',

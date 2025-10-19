@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal, Button } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-//import { SafeAreaView } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+// import { SafeAreaView } from 'react-native';
 import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
 import Profile from './src/components/profile/Profile';
@@ -10,7 +10,11 @@ import AuthModal from './src/components/authmodal/AuthModal';
 export default function App() {
   const [cart, setCart] = useState([]);
   const [activeTab, setActiveTab] = useState('Menu');
+
+  // authFlag determines whether the pop up for authentication appears
   const [authFlag, setAuthFlag] = useState(false);
+
+  // authMode determines what mode that pop up is in when it appears (Sign In/Registration)
   const [authMode, setAuthMode] = useState('Sign In');
 
   const addToCart = (item) => {
@@ -52,23 +56,25 @@ export default function App() {
     };
   };
 
+  // Renders page in main screen depending on activeTab
   const renderPage = () => {
     switch (activeTab) {
       case 'Menu':
         return <Menu addToCart={addToCart} />
       case 'OrderSummary':
         return <CartScreen
-            cart={cart}
-            {...calculateTotal()}
-            onIncrease={(id) => updateQuantity(id, 1)}
-            onDecrease={(id) => updateQuantity(id, -1)}
-            onOrderComplete={() => {
-              setCart([]);
-              setActiveTab('Menu');
-            }}
-          />
-        case 'Profile':
-          return <Profile setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
+          cart={cart}
+          {...calculateTotal()}
+          onIncrease={(id) => updateQuantity(id, 1)}
+          onDecrease={(id) => updateQuantity(id, -1)}
+          onOrderComplete={() => {
+            setCart([]);
+            setActiveTab('Menu');
+          }}
+        />
+      case 'Profile':
+        // Profile page has options to sign in or register, so it needs the function that changes
+        return <Profile setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
     };
   };
 
@@ -76,47 +82,24 @@ export default function App() {
     <SafeAreaProvider style={styles.container}>
       {/* App screen content */}
 
-    {/* Pop up for sign in and registration */}
+      {/* Modal pop up that shows sign in and registration page */}
+
       <Modal
         visible={authFlag}
         animationType="slide"
       >
-          <AuthModal 
-            setAuthFlag={setAuthFlag}
-            authMode={authMode}
-            setAuthMode={setAuthMode}
-          />
-      </Modal> 
-     
+        <AuthModal
+          setAuthFlag={setAuthFlag}
+          authMode={authMode}
+          setAuthMode={setAuthMode}
+        />
+      </Modal>
 
-      {/* { signinFlag && 
-      <View style={styles.signinContainer}>
-        <SignIn setSigninFlag={setSigninFlag} />
-      </View>
-      } */}
-
+      {/* Renders Menu, Cart, or Profile page, can add more if needed */}
       <View style={styles.content}>
-        
-        {/* Old render page view */}
-        {/* {activeTab === 'Menu' ? (
-          <Menu addToCart={addToCart} />
-        ) : (
-          <CartScreen
-            cart={cart}
-            {...calculateTotal()}
-            onIncrease={(id) => updateQuantity(id, 1)}
-            onDecrease={(id) => updateQuantity(id, -1)}
-            onOrderComplete={() => {
-              setCart([]);
-              setActiveTab('Menu');
-            }}
-          />
-        )} */}
-
-      {/* New way to render pages, needed for more than 2 pages */}
-      <>{renderPage()}</>
-
+        <>{renderPage()}</>
       </View>
+
       {/* Footer tabs */}
       <View style={styles.tabBar}>
         <TouchableOpacity
@@ -130,13 +113,13 @@ export default function App() {
         <TouchableOpacity
           style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
           onPress={() => setActiveTab('OrderSummary')}
-          // disabled={cart.length === 0}
+        // disabled={cart.length === 0}
         >
           <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
             Cart {cart.length > 0 && `(${cart.length})`}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
           onPress={() => setActiveTab('Profile')}
         >
@@ -180,11 +163,4 @@ const styles = StyleSheet.create({
     color: '#ffb300',
     fontWeight: '500',
   },
-  // signinContainer: {
-  //   flex: 1,
-  //   alignItems: 'center',
-  //   position: 'absolute',
-  //   backgroundColor: '#ffffff',
-  //   zIndex:10,
-  // }
 });
