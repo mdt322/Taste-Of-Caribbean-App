@@ -103,6 +103,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       <TouchableOpacity
         // onPress={() => navigation.navigate('Login')}
         onPress={() => setAuthMode('Sign In')}
+        disabled={loading}
       >
         <Text style={styles.linkText}>
           Already have an account? Sign in
