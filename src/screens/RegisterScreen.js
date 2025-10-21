@@ -59,35 +59,39 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       <Text style={styles.title}>Create Account</Text>
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Full Name"
         value={name}
         onChangeText={setName}
+        editable={!loading}
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
+        editable={!loading}
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        editable={!loading}
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Confirm Password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
+        editable={!loading}
       />
 
       <TouchableOpacity
@@ -147,6 +151,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
     backgroundColor: '#f9f9f9',
+  },
+  inputLoading: {
+    color: '#a1a1a1ff',
   },
   button: {
     backgroundColor: '#3498db',
