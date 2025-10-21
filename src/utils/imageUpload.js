@@ -1,13 +1,6 @@
-const { initializeApp } = require('firebase/app');
-const { getFirestore, collection, getDocs, updateDoc, doc } = require('firebase/firestore');
-const { getStorage, ref, uploadBytes, getDownloadURL } = require('firebase/storage');
-
-const { firebaseConfig } = require('../config/firebase.config');
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+const { collection, getDocs, updateDoc, doc } = require('firebase/firestore');
+const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
+const { db, storage } = require('../config/firebase.js');
 
 // Sample image URLs for Caribbean food items
 const sampleImageUrls = {

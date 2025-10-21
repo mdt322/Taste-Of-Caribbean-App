@@ -12,6 +12,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('Menu');
   const [authFlag, setAuthFlag] = useState(false);
   const [authMode, setAuthMode] = useState('Sign In');
+  const [user, setUser] = useState(null); // User authentication state
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -52,6 +53,35 @@ export default function App() {
     };
   };
 
+  const handleLoginSuccess = (email) => {
+    // Simulate setting user data after successful login
+    setUser({
+      name: email.split('@')[0], // Extract name from email for demo
+      email: email,
+      joinDate: new Date().toLocaleDateString(),
+      loyaltyPoints: 150,
+      memberSince: new Date().toLocaleDateString(),
+      avatar: null
+    });
+  };
+
+  const handleRegisterSuccess = (userData) => {
+    // Set user data after successful registration
+    setUser({
+      name: userData.name,
+      email: userData.email,
+      joinDate: new Date().toLocaleDateString(),
+      loyaltyPoints: 50, // New users start with some points
+      memberSince: new Date().toLocaleDateString(),
+      avatar: null
+    });
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setAuthFlag(false);
+  };
+
   const renderPage = () => {
     switch (activeTab) {
       case 'Menu':
@@ -68,7 +98,12 @@ export default function App() {
             }}
           />
         case 'Profile':
-          return <Profile setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
+          return <Profile 
+            user={user} 
+            setAuthFlag={setAuthFlag} 
+            setAuthMode={setAuthMode}
+            onLogout={handleLogout}
+          />
     };
   };
 
@@ -85,6 +120,8 @@ export default function App() {
             setAuthFlag={setAuthFlag}
             authMode={authMode}
             setAuthMode={setAuthMode}
+            onLoginSuccess={handleLoginSuccess}
+            onRegisterSuccess={handleRegisterSuccess}
           />
       </Modal> 
      

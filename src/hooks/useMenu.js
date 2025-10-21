@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import { db } from '../firebase.js';
+import { db } from '../config/firebase.js';
 
 export const useMenu = () => {
   const [menuItems, setMenuItems] = useState([]);

@@ -3,19 +3,27 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import LoginScreen from '../../screens/LoginScreen';
 import RegisterScreen from '../../screens/RegisterScreen'
 
-const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
+const AuthModal = ({ setAuthFlag, authMode, setAuthMode, onLoginSuccess, onRegisterSuccess }) => {
 
     const renderContent = () => {
         switch (authMode) {
 
             case ('Sign In'):
                 return (
-                    <LoginScreen setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
+                    <LoginScreen 
+                        setAuthFlag={setAuthFlag} 
+                        setAuthMode={setAuthMode}
+                        onLoginSuccess={onLoginSuccess}
+                    />
                 );
 
             case ('Register'):
                 return (
-                    <RegisterScreen setAuthMode={setAuthMode} />
+                    <RegisterScreen 
+                        setAuthMode={setAuthMode} 
+                        setAuthFlag={setAuthFlag}
+                        onRegisterSuccess={onRegisterSuccess}
+                    />
                 );
         }
     }

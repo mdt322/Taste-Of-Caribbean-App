@@ -3,27 +3,53 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'reac
 // import { signInWithEmailAndPassword } from 'firebase/auth';
 // import { auth } from '../config/firebase';
 
-const LoginScreen = ({ setAuthFlag, setAuthMode }) => {
+const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
-  // const handleLogin = async () => {
-  //   if (!email || !password) {
-  //     Alert.alert('Error', 'Please fill in all fields');
-  //     return;
-  //   }
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
 
-  //   try {
-  //     setLoading(true);
-  //     await signInWithEmailAndPassword(auth, email, password);
-  //     // Navigation handled by auth state change listener in App.js
-  //   } catch (error) {
-  //     Alert.alert('Login Failed', error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    try {
+      setLoading(true);
+      // Simulate successful login (replace with actual Firebase auth)
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
+      setLoginSuccess(true);
+      if (onLoginSuccess) {
+        onLoginSuccess(email); // Pass email to parent component
+      }
+      setAuthFlag(false); // Close auth modal after successful login
+    } catch (error) {
+      Alert.alert('Login Failed', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loginSuccess) {
+    return (
+      <View style={styles.successContainer}>
+        <View style={styles.successMessage}>
+          <Text style={styles.successIcon}>✓</Text>
+          <Text style={styles.successTitle}>Login Successful!</Text>
+          <Text style={styles.successText}>
+            Welcome back! You have successfully signed in to your account.
+          </Text>
+          <TouchableOpacity
+            style={styles.successButton}
+            onPress={() => setAuthFlag(false)}
+          >
+            <Text style={styles.successButtonText}>Continue to Menu</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -48,7 +74,7 @@ const LoginScreen = ({ setAuthFlag, setAuthMode }) => {
 
       <TouchableOpacity 
         style={styles.button} 
-        // onPress={handleLogin}
+        onPress={handleLogin}
         disabled={loading}
       >
         <Text style={styles.buttonText}>
@@ -122,6 +148,60 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     fontSize: 16,
+  },
+  successContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  successMessage: {
+    alignItems: 'center',
+    padding: 30,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#28a745',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  successIcon: {
+    fontSize: 48,
+    color: '#28a745',
+    marginBottom: 15,
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#28a745',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  successText: {
+    fontSize: 16,
+    color: '#6c757d',
+    textAlign: 'center',
+    marginBottom: 25,
+    lineHeight: 22,
+  },
+  successButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  successButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
