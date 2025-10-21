@@ -115,6 +115,7 @@ export default function App() {
   return (
     <SafeAreaProvider style={styles.container}>
       {/* App screen content */}
+      {/* <SafeAreaView style={styles.appContainer}> */}
 
       {/* Modal pop up that shows sign in and registration page */}
 
@@ -188,7 +189,7 @@ export default function App() {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      {/* </SafeAreaView> */}
     </SafeAreaProvider >
   );
 }
