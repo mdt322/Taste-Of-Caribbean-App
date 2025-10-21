@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import OrderHistory from './OrderHistory';
 
 const Profile = ({ user, setAuthFlag, setAuthMode, onLogout }) => {
+    const [showOrderHistory, setShowOrderHistory] = useState(false);
     const setToRegister = () => {
         setAuthFlag(true);
         setAuthMode('Register');
@@ -24,6 +26,11 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout }) => {
             ]
         );
     };
+
+    // Show OrderHistory component if requested
+    if (showOrderHistory) {
+        return <OrderHistory onBack={() => setShowOrderHistory(false)} />;
+    }
 
     if (user) {
         // Logged in user profile
@@ -92,7 +99,10 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout }) => {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Quick Actions</Text>
                     <View style={styles.actionsGrid}>
-                        <TouchableOpacity style={styles.actionCard}>
+                        <TouchableOpacity
+                            style={styles.actionCard}
+                            onPress={() => setShowOrderHistory(true)}
+                        >
                             <Text style={styles.actionIcon}>📋</Text>
                             <Text style={styles.actionText}>Order History</Text>
                         </TouchableOpacity>
