@@ -20,34 +20,35 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
       setLoading(true);
       setStatusMessage('Logging in...');
       setShowStatus(true);
-      
+
       // Simulate successful login (replace with actual Firebase auth)
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-      
+
       setStatusMessage('Login successful!');
       if (onLoginSuccess) {
         onLoginSuccess(email); // Pass email to parent component
       }
-      
+
       // Hide status after 2 seconds and close modal
       setTimeout(() => {
         setShowStatus(false);
         setAuthFlag(false); // Close auth modal after successful login
+        setLoading(false);
       }, 2000);
-      
+
     } catch (error) {
       setStatusMessage('Login failed');
       setTimeout(() => setShowStatus(false), 2000);
       Alert.alert('Login Failed', error.message);
     } finally {
-      setLoading(false);
+      // setLoading(false); // Moved up and into setTimeout()
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back!</Text>
-      
+
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -56,7 +57,7 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
         autoCapitalize="none"
         keyboardType="email-address"
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -65,8 +66,8 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
         secureTextEntry
       />
 
-      <TouchableOpacity 
-        style={styles.button} 
+      <TouchableOpacity
+        style={styles.button}
         onPress={handleLogin}
         disabled={loading}
       >
@@ -75,8 +76,8 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.button, styles.close]} 
+      <TouchableOpacity
+        style={[styles.button, styles.close]}
         onPress={() => setAuthFlag(false)}
         disabled={loading}
       >
@@ -85,10 +86,10 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         // onPress={() => navigation.navigate('Register')}
         onPress={() => setAuthMode('Register')}
-        >
+      >
         <Text style={styles.linkText}>
           Don't have an account? Sign up
         </Text>
@@ -97,7 +98,7 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
       {/* Status Indicator */}
       {showStatus && (
         <View style={[
-          styles.statusIndicator, 
+          styles.statusIndicator,
           statusMessage.includes('successful') && styles.statusSuccess
         ]}>
           <Text style={styles.statusText}>{statusMessage}</Text>

@@ -27,27 +27,30 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       setLoading(true);
       setStatusMessage('Creating account...');
       setShowStatus(true);
-      
+
       // Simulate successful registration (replace with actual Firebase auth)
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-      
+
       setStatusMessage('Registration successful!');
       if (onRegisterSuccess) {
         onRegisterSuccess({ name, email }); // Pass user data to parent component
       }
-      
+
       // Hide status after 2 seconds and close modal
       setTimeout(() => {
         setShowStatus(false);
         setAuthFlag(false); // Close auth modal after successful registration
+        setAuthMode('Sign In'); //Sets Authentication Modal to default state
+        setLoading(false); // Prevents button from being pressed after successful registration
       }, 2000);
-      
+
+
     } catch (error) {
       setStatusMessage('Registration failed');
       setTimeout(() => setShowStatus(false), 2000);
       Alert.alert('Registration Failed', error.message);
     } finally {
-      setLoading(false);
+      // setLoading(false); // Moved up and into to setTimeout()
     }
   };
 
@@ -109,7 +112,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       {/* Status Indicator */}
       {showStatus && (
         <View style={[
-          styles.statusIndicator, 
+          styles.statusIndicator,
           statusMessage.includes('successful') && styles.statusSuccess
         ]}>
           <Text style={styles.statusText}>{statusMessage}</Text>
