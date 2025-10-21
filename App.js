@@ -16,6 +16,7 @@ export default function App() {
 
   // authMode determines what mode that pop up is in when it appears (Sign In/Registration)
   const [authMode, setAuthMode] = useState('Sign In');
+  const [user, setUser] = useState(null); // User authentication state
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -56,6 +57,35 @@ export default function App() {
     };
   };
 
+  const handleLoginSuccess = (email) => {
+    // Simulate setting user data after successful login
+    setUser({
+      name: email.split('@')[0], // Extract name from email for demo
+      email: email,
+      joinDate: new Date().toLocaleDateString(),
+      loyaltyPoints: 150,
+      memberSince: new Date().toLocaleDateString(),
+      avatar: null
+    });
+  };
+
+  const handleRegisterSuccess = (userData) => {
+    // Set user data after successful registration
+    setUser({
+      name: userData.name,
+      email: userData.email,
+      joinDate: new Date().toLocaleDateString(),
+      loyaltyPoints: 50, // New users start with some points
+      memberSince: new Date().toLocaleDateString(),
+      avatar: null
+    });
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setAuthFlag(false);
+  };
+
   // Renders page in main screen depending on activeTab
   const renderPage = () => {
     switch (activeTab) {
@@ -73,8 +103,12 @@ export default function App() {
           }}
         />
       case 'Profile':
-        // Profile page has options to sign in or register, so it needs the function that changes
-        return <Profile setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
+        return <Profile
+          user={user}
+          setAuthFlag={setAuthFlag}
+          setAuthMode={setAuthMode}
+          onLogout={handleLogout}
+        />
     };
   };
 
@@ -92,45 +126,70 @@ export default function App() {
           setAuthFlag={setAuthFlag}
           authMode={authMode}
           setAuthMode={setAuthMode}
+          onLoginSuccess={handleLoginSuccess}
+          onRegisterSuccess={handleRegisterSuccess}
         />
       </Modal>
 
-      <SafeAreaView style={styles.appContainer}>
-        {/* Renders Menu, Cart, or Profile page, can add more if needed */}
-        <View style={styles.content}>
-          <>{renderPage()}</>
-        </View>
 
-        {/* Footer tabs */}
-        <View style={styles.tabBar}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
-            onPress={() => setActiveTab('Menu')}
-          >
-            <Text style={[styles.tabText, activeTab === 'Menu' && styles.activeTabText]}>
-              Menu
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
-            onPress={() => setActiveTab('OrderSummary')}
-          // disabled={cart.length === 0}
-          >
-            <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
-              Cart {cart.length > 0 && `(${cart.length})`}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
-            onPress={() => setActiveTab('Profile')}
-          >
-            <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
-              Profile
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+      {/* { signinFlag && 
+      <View style={styles.signinContainer}>
+        <SignIn setSigninFlag={setSigninFlag} />
+      </View>
+      } */}
+
+      <View style={styles.content}>
+
+        {/* Old render page view */}
+        {/* {activeTab === 'Menu' ? (
+          <Menu addToCart={addToCart} />
+        ) : (
+          <CartScreen
+            cart={cart}
+            {...calculateTotal()}
+            onIncrease={(id) => updateQuantity(id, 1)}
+            onDecrease={(id) => updateQuantity(id, -1)}
+            onOrderComplete={() => {
+              setCart([]);
+              setActiveTab('Menu');
+            }}
+          />
+        )} */}
+
+        {/* New way to render pages, needed for more than 2 pages */}
+        <>{renderPage()}</>
+
+      </View>
+      {/* Footer tabs */}
+      <View style={styles.tabBar}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
+          onPress={() => setActiveTab('Menu')}
+        >
+          <Text style={[styles.tabText, activeTab === 'Menu' && styles.activeTabText]}>
+            Menu
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
+          onPress={() => setActiveTab('OrderSummary')}
+        // disabled={cart.length === 0}
+        >
+          <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
+            Cart {cart.length > 0 && `(${cart.length})`}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
+          onPress={() => setActiveTab('Profile')}
+        >
+          <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
+            Profile
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+    </SafeAreaProvider >
   );
 }
 

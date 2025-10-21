@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import LoginScreen from '../../screens/LoginScreen';
 import RegisterScreen from '../../screens/RegisterScreen'
 
-const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
+const AuthModal = ({ setAuthFlag, authMode, setAuthMode, onLoginSuccess, onRegisterSuccess }) => {
 
     // Determines with authMode what to display when popping up
     const renderContent = () => {
@@ -14,12 +14,20 @@ const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
             // setAuthFlag passed to both in case there is an implementation to close the window whenever the user wants.
             case ('Sign In'):
                 return (
-                    <LoginScreen setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
+                    <LoginScreen
+                        setAuthFlag={setAuthFlag}
+                        setAuthMode={setAuthMode}
+                        onLoginSuccess={onLoginSuccess}
+                    />
                 );
 
             case ('Register'):
                 return (
-                    <RegisterScreen setAuthFlag={setAuthFlag} setAuthMode={setAuthMode} />
+                    <RegisterScreen
+                        setAuthMode={setAuthMode}
+                        setAuthFlag={setAuthFlag}
+                        onRegisterSuccess={onRegisterSuccess}
+                    />
                 );
         }
     }
@@ -33,8 +41,8 @@ const AuthModal = ({ setAuthFlag, authMode, setAuthMode }) => {
 
 const styles = StyleSheet.create({
     signinModal: {
-    width: 300,
-    borderRadius: 20,
-  },
+        width: 300,
+        borderRadius: 20,
+    },
 });
 export default AuthModal;
