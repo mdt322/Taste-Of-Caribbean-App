@@ -98,9 +98,19 @@ export default function App() {
           onIncrease={(id) => updateQuantity(id, 1)}
           onDecrease={(id) => updateQuantity(id, -1)}
           onOrderComplete={() => {
+            // Award loyalty points to signed-in users
+            if (user) {
+              const pointsEarned = Math.floor(calculateTotal().total);
+              setUser(prevUser => ({
+                ...prevUser,
+                loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
+              }));
+            }
+            
             setCart([]);
             setActiveTab('Menu');
           }}
+          user={user}
         />
       case 'Profile':
         return <Profile

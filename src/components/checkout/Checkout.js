@@ -35,7 +35,7 @@ const generateTimeSlots = () => {
   return slots;
 };
 
-const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0, onBack, onOrderComplete }) => {
+const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0, onBack, onOrderComplete, user }) => {
   const [deliveryMethod, setDeliveryMethod] = useState('pickup');
   const [selectedTime, setSelectedTime] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -187,6 +187,48 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
     </View>
   );
 
+  const renderLoyaltyPoints = () => {
+    if (!user) {
+      // Not signed in - show missed opportunity
+      const pointsMissed = Math.floor(total);
+      return (
+        <View style={styles.section}>
+          <View style={styles.loyaltyHeader}>
+            <MaterialIcons name="stars" size={24} color="#ffb300" />
+            <Text style={styles.sectionTitle}>Loyalty Points</Text>
+          </View>
+          <View style={styles.loyaltyContent}>
+            <Text style={styles.loyaltyMessage}>
+              Sign in to earn <Text style={styles.pointsHighlight}>{pointsMissed} points</Text> on this order!
+            </Text>
+            <Text style={styles.loyaltySubtext}>
+              1 point = $1 spent • Points can be redeemed for free meals
+            </Text>
+          </View>
+        </View>
+      );
+    }
+
+    // Signed in - show points to be earned
+    const pointsToEarn = Math.floor(total);
+    return (
+      <View style={styles.section}>
+        <View style={styles.loyaltyHeader}>
+          <MaterialIcons name="stars" size={24} color="#ffb300" />
+          <Text style={styles.sectionTitle}>Loyalty Points</Text>
+        </View>
+        <View style={styles.loyaltyContent}>
+          <Text style={styles.loyaltyMessage}>
+            You'll earn <Text style={styles.pointsHighlight}>{pointsToEarn} points</Text> with this order!
+          </Text>
+          <Text style={styles.loyaltySubtext}>
+            Current balance: {user.loyaltyPoints || 0} points
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -200,6 +242,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
         {renderDeliveryOptions()}
         {renderTimeSelection()}
         {renderCartSummary()}
+        {renderLoyaltyPoints()}
         <TouchableOpacity 
           style={[styles.applePayButton, (!selectedTime || isLoading) && styles.applePayButtonDisabled]} 
           onPress={handlePayment}
@@ -425,6 +468,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginLeft: 8,
+  },
+  loyaltyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  loyaltyContent: {
+    alignItems: 'center',
+  },
+  loyaltyMessage: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 8,
+    lineHeight: 22,
+  },
+  pointsHighlight: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffb300',
+  },
+  loyaltySubtext: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });
 

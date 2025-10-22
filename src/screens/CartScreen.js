@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import OrderSummary from '../components/checkout/OrderSummary';
 import Checkout from '../components/checkout/Checkout';
 
-const CartScreen = ({ cart, subtotal, tax, deliveryFee, total, onIncrease, onDecrease, onOrderComplete }) => {
+const CartScreen = ({ cart, subtotal, tax, deliveryFee, total, onIncrease, onDecrease, onOrderComplete, user }) => {
   const [showCheckout, setShowCheckout] = useState(false);
 
   if (showCheckout) {
@@ -18,6 +18,7 @@ const CartScreen = ({ cart, subtotal, tax, deliveryFee, total, onIncrease, onDec
           setShowCheckout(false);
           onOrderComplete();
         }}
+        user={user}
       />
     );
   }
