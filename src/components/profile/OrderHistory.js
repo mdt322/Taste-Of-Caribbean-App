@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#e9ecef',
-    paddingTop: 50, // Account for status bar
   },
   backButton: {
     padding: 8,
