@@ -35,102 +35,105 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout }) => {
     if (user) {
         // Logged in user profile
         return (
-            <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-                {/* Header with user info */}
-                <View style={styles.header}>
-                    <View style={styles.avatarContainer}>
-                        <View style={styles.avatar}>
-                            <Text style={styles.avatarText}>
-                                {user.name.charAt(0).toUpperCase()}
+            <View style={styles.container}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+
+                    {/* Header with user info */}
+                    <View style={styles.header}>
+                        <View style={styles.avatarContainer}>
+                            <View style={styles.avatar}>
+                                <Text style={styles.avatarText}>
+                                    {user.name.charAt(0).toUpperCase()}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.userInfo}>
+                            <Text style={styles.userName}>{user.name}</Text>
+                            <Text style={styles.userEmail}>{user.email}</Text>
+                            <Text style={styles.memberSince}>
+                                Member since {user.memberSince}
                             </Text>
                         </View>
                     </View>
-                    <View style={styles.userInfo}>
-                        <Text style={styles.userName}>{user.name}</Text>
-                        <Text style={styles.userEmail}>{user.email}</Text>
-                        <Text style={styles.memberSince}>
-                            Member since {user.memberSince}
+
+                    {/* Loyalty Points Card */}
+                    <View style={styles.pointsCard}>
+                        <View style={styles.pointsHeader}>
+                            <Text style={styles.pointsTitle}>Loyalty Points</Text>
+                            <Text style={styles.pointsValue}>{user.loyaltyPoints}</Text>
+                        </View>
+                        <Text style={styles.pointsDescription}>
+                            Earn points with every order! 1 point per $1 spent.
+                        </Text>
+                        <View style={styles.pointsProgress}>
+                            <View
+                                style={[
+                                    styles.pointsProgressBar,
+                                    { width: `${Math.min((user.loyaltyPoints / 500) * 100, 100)}%` }
+                                ]}
+                            />
+                        </View>
+                        <Text style={styles.pointsNextReward}>
+                            {500 - user.loyaltyPoints} points until your next free meal!
                         </Text>
                     </View>
-                </View>
 
-                {/* Loyalty Points Card */}
-                <View style={styles.pointsCard}>
-                    <View style={styles.pointsHeader}>
-                        <Text style={styles.pointsTitle}>Loyalty Points</Text>
-                        <Text style={styles.pointsValue}>{user.loyaltyPoints}</Text>
-                    </View>
-                    <Text style={styles.pointsDescription}>
-                        Earn points with every order! 1 point per $1 spent.
-                    </Text>
-                    <View style={styles.pointsProgress}>
-                        <View
-                            style={[
-                                styles.pointsProgressBar,
-                                { width: `${Math.min((user.loyaltyPoints / 500) * 100, 100)}%` }
-                            ]}
-                        />
-                    </View>
-                    <Text style={styles.pointsNextReward}>
-                        {500 - user.loyaltyPoints} points until your next free meal!
-                    </Text>
-                </View>
-
-                {/* Account Information */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Account Information</Text>
-                    <View style={styles.infoCard}>
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoLabel}>Email</Text>
-                            <Text style={styles.infoValue}>{user.email}</Text>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoLabel}>Member Since</Text>
-                            <Text style={styles.infoValue}>{user.memberSince}</Text>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoLabel}>Account Status</Text>
-                            <Text style={[styles.infoValue, styles.statusActive]}>Active</Text>
+                    {/* Account Information */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Account Information</Text>
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoRow}>
+                                <Text style={styles.infoLabel}>Email</Text>
+                                <Text style={styles.infoValue}>{user.email}</Text>
+                            </View>
+                            <View style={styles.infoRow}>
+                                <Text style={styles.infoLabel}>Member Since</Text>
+                                <Text style={styles.infoValue}>{user.memberSince}</Text>
+                            </View>
+                            <View style={styles.infoRow}>
+                                <Text style={styles.infoLabel}>Account Status</Text>
+                                <Text style={[styles.infoValue, styles.statusActive]}>Active</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
 
-                {/* Quick Actions */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Quick Actions</Text>
-                    <View style={styles.actionsGrid}>
-                        <TouchableOpacity
-                            style={styles.actionCard}
-                            onPress={() => setShowOrderHistory(true)}
-                        >
-                            <Text style={styles.actionIcon}>📋</Text>
-                            <Text style={styles.actionText}>Order History</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.actionCard}>
-                            <Text style={styles.actionIcon}>🎁</Text>
-                            <Text style={styles.actionText}>Rewards</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.actionCard}>
-                            <Text style={styles.actionIcon}>❤️</Text>
-                            <Text style={styles.actionText}>Favorites</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.actionCard}>
-                            <Text style={styles.actionIcon}>⚙️</Text>
-                            <Text style={styles.actionText}>Settings</Text>
-                        </TouchableOpacity>
+                    {/* Quick Actions */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Quick Actions</Text>
+                        <View style={styles.actionsGrid}>
+                            <TouchableOpacity
+                                style={styles.actionCard}
+                                onPress={() => setShowOrderHistory(true)}
+                            >
+                                <Text style={styles.actionIcon}>📋</Text>
+                                <Text style={styles.actionText}>Order History</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.actionCard}>
+                                <Text style={styles.actionIcon}>🎁</Text>
+                                <Text style={styles.actionText}>Rewards</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.actionCard}>
+                                <Text style={styles.actionIcon}>❤️</Text>
+                                <Text style={styles.actionText}>Favorites</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.actionCard}>
+                                <Text style={styles.actionIcon}>⚙️</Text>
+                                <Text style={styles.actionText}>Settings</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
 
-                {/* Logout Button */}
-                <TouchableOpacity
-                    style={styles.logoutButton}
-                    onPress={handleLogout}
-                >
-                    <Text style={styles.logoutButtonText}>Logout</Text>
-                </TouchableOpacity>
+                    {/* Logout Button */}
+                    <TouchableOpacity
+                        style={styles.logoutButton}
+                        onPress={handleLogout}
+                    >
+                        <Text style={styles.logoutButtonText}>Logout</Text>
+                    </TouchableOpacity>
 
-                <View style={styles.bottomSpacing} />
-            </ScrollView>
+                    <View style={styles.bottomSpacing} />
+                </ScrollView>
+            </View>
         );
     }
 
@@ -202,6 +205,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f8f9fa',
+        paddingTop: 50, // Status bar padding
+    },
+    scrollContent: {
+        flexGrow: 1,
     },
     bottomSpacing: {
         height: 50,

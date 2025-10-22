@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, Modal, Button } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Modal, Button, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
@@ -148,7 +148,7 @@ export default function App() {
       </View>
       } */}
 
-      <SafeAreaView style={styles.content}>
+      <View style={styles.content}>
 
         {/* Old render page view */}
         {/* {activeTab === 'Menu' ? (
@@ -169,7 +169,7 @@ export default function App() {
         {/* New way to render pages, needed for more than 2 pages */}
         <>{renderPage()}</>
 
-      </SafeAreaView>
+      </View>
       {/* Footer tabs */}
       <View style={styles.tabBar}>
         <TouchableOpacity
