@@ -27,27 +27,30 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       setLoading(true);
       setStatusMessage('Creating account...');
       setShowStatus(true);
-      
+
       // Simulate successful registration (replace with actual Firebase auth)
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-      
+
       setStatusMessage('Registration successful!');
       if (onRegisterSuccess) {
         onRegisterSuccess({ name, email }); // Pass user data to parent component
       }
-      
+
       // Hide status after 2 seconds and close modal
       setTimeout(() => {
         setShowStatus(false);
         setAuthFlag(false); // Close auth modal after successful registration
+        setAuthMode('Sign In'); //Sets Authentication Modal to default state
+        setLoading(false); // Prevents button from being pressed after successful registration
       }, 2000);
-      
+
+
     } catch (error) {
       setStatusMessage('Registration failed');
       setTimeout(() => setShowStatus(false), 2000);
       Alert.alert('Registration Failed', error.message);
     } finally {
-      setLoading(false);
+      // setLoading(false); // Moved up and into to setTimeout()
     }
   };
 
@@ -56,35 +59,39 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       <Text style={styles.title}>Create Account</Text>
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Full Name"
         value={name}
         onChangeText={setName}
+        editable={!loading}
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
+        editable={!loading}
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        editable={!loading}
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, loading && styles.inputLoading]}
         placeholder="Confirm Password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
+        editable={!loading}
       />
 
       <TouchableOpacity
@@ -100,6 +107,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       <TouchableOpacity
         // onPress={() => navigation.navigate('Login')}
         onPress={() => setAuthMode('Sign In')}
+        disabled={loading}
       >
         <Text style={styles.linkText}>
           Already have an account? Sign in
@@ -109,7 +117,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       {/* Status Indicator */}
       {showStatus && (
         <View style={[
-          styles.statusIndicator, 
+          styles.statusIndicator,
           statusMessage.includes('successful') && styles.statusSuccess
         ]}>
           <Text style={styles.statusText}>{statusMessage}</Text>
@@ -143,6 +151,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
     backgroundColor: '#f9f9f9',
+  },
+  inputLoading: {
+    color: '#a1a1a1ff',
   },
   button: {
     backgroundColor: '#3498db',
