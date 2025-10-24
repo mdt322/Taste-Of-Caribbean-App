@@ -1,18 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 
 const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, onDecrease, onCheckout }) => {
   if (items.length === 0) {
     return (
-      <View style={styles.emptyContainer}>
+      <SafeAreaView style={styles.emptyContainer}>
         <Text style={styles.emptyText}>Your cart is empty</Text>
         <Text style={styles.emptySubtext}>Add some delicious items to get started!</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Order Summary</Text>
       <ScrollView style={styles.itemList}>
         {items.map((item) => (
@@ -75,7 +75,7 @@ const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, on
           <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -83,13 +83,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 16,
     paddingHorizontal: 16,
+    paddingTop: 16,
     color: '#2e8b57',
   },
   emptyContainer: {

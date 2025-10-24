@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, SafeAreaView } from 'react-native';
 import OrderHistory from './OrderHistory';
+import SettingsScreen from '../../screens/SettingsScreen';
 
 const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, navigation }) => {
     const [showOrderHistory, setShowOrderHistory] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
     const setToRegister = () => {
         setAuthFlag(true);
         setAuthMode('Register');
@@ -32,10 +34,34 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
         return <OrderHistory onBack={() => setShowOrderHistory(false)} />;
     }
 
+    // Show SettingsScreen component if requested
+    if (showSettings) {
+        return <SettingsScreen
+            user={user}
+            onBack={() => setShowSettings(false)}
+            navigation={navigation}
+            toggleTheme={() => {
+                // TODO: Implement theme toggle functionality
+            }}
+            colors={{
+                background: '#f8f9fa',
+                surface: '#fff',
+                text: '#2c3e50',
+                textSecondary: '#6c757d',
+                textMuted: '#a1a1a1ff',
+                primary: '#3498db',
+                border: '#e9ecef',
+                shadow: '#000',
+                success: '#28a745'
+            }}
+            theme="light"
+        />;
+    }
+
     if (user) {
         // Logged in user profile
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
                     {/* Header with user info */}
@@ -119,7 +145,7 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                                 <Text style={styles.actionIcon}>❤️</Text>
                                 <Text style={styles.actionText}>Favorites</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.actionCard}>
+                            <TouchableOpacity style={styles.actionCard} onPress={() => setShowSettings(true)}>
                                 <Text style={styles.actionIcon}>⚙️</Text>
                                 <Text style={styles.actionText}>Settings</Text>
                             </TouchableOpacity>
@@ -136,13 +162,13 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
 
                     <View style={styles.bottomSpacing} />
                 </ScrollView>
-            </View>
+            </SafeAreaView>
         );
     }
 
     // Not logged in view
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             {/* Header */}
             <View style={styles.headerNotLoggedIn}>
                 <Text style={styles.title}>Welcome to Taste of Caribbean</Text>
@@ -199,7 +225,7 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -208,7 +234,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f8f9fa',
-        paddingTop: 50, // Status bar padding
     },
     scrollContent: {
         flexGrow: 1,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { saveOrder } from '../../utils/orderStorage';
 
@@ -230,7 +230,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <MaterialIcons name="arrow-back" size={24} color="#2e8b57" />
@@ -271,7 +271,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
           </View>
         </Modal>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -366,7 +366,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 16,
   },
   section: {
     backgroundColor: '#fff',

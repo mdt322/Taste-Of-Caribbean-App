@@ -21,7 +21,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { useMenu } from '../../hooks/useMenu.js';
 
 const Menu = ({ addToCart }) => {
@@ -30,17 +30,17 @@ const Menu = ({ addToCart }) => {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
+      <SafeAreaView style={styles.centered}>
         <Text>Loading menu...</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.centered}>
+      <SafeAreaView style={styles.centered}>
         <Text>Error: {error.message}</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -75,7 +75,7 @@ const Menu = ({ addToCart }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Menu</Text>
         <View style={styles.categories}>
@@ -99,7 +99,7 @@ const Menu = ({ addToCart }) => {
         numColumns={2}
         contentContainerStyle={styles.menuList}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
