@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, Modal, Button, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Modal, Button, View, StatusBar } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
@@ -106,7 +106,7 @@ export default function App() {
                 loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
               }));
             }
-            
+
             setCart([]);
             setActiveTab('Menu');
           }}
@@ -127,42 +127,42 @@ export default function App() {
           onAddToCart={addToCart}
           cart={cart}
         />
-      default:
-        return <Menu addToCart={addToCart} />
+      // default:
+      //   return <Menu addToCart={addToCart} />
     };
   };
 
   return (
     <SafeAreaProvider style={styles.container}>
       {/* App screen content */}
-      {/* <SafeAreaView style={styles.appContainer}> */}
+      <SafeAreaView style={styles.appContainer}>
+        <StatusBar barStyle="dark-content" />
+        {/* Modal pop up that shows sign in and registration page */}
 
-      {/* Modal pop up that shows sign in and registration page */}
-
-      <Modal
-        visible={authFlag}
-        animationType="slide"
-      >
-        <AuthModal
-          setAuthFlag={setAuthFlag}
-          authMode={authMode}
-          setAuthMode={setAuthMode}
-          onLoginSuccess={handleLoginSuccess}
-          onRegisterSuccess={handleRegisterSuccess}
-        />
-      </Modal>
+        <Modal
+          visible={authFlag}
+          animationType="slide"
+        >
+          <AuthModal
+            setAuthFlag={setAuthFlag}
+            authMode={authMode}
+            setAuthMode={setAuthMode}
+            onLoginSuccess={handleLoginSuccess}
+            onRegisterSuccess={handleRegisterSuccess}
+          />
+        </Modal>
 
 
-      {/* { signinFlag && 
+        {/* { signinFlag && 
       <View style={styles.signinContainer}>
         <SignIn setSigninFlag={setSigninFlag} />
       </View>
       } */}
 
-      <View style={styles.content}>
+        <View style={styles.content}>
 
-        {/* Old render page view */}
-        {/* {activeTab === 'Menu' ? (
+          {/* Old render page view */}
+          {/* {activeTab === 'Menu' ? (
           <Menu addToCart={addToCart} />
         ) : (
           <CartScreen
@@ -177,47 +177,53 @@ export default function App() {
           />
         )} */}
 
-        {/* New way to render pages, needed for more than 2 pages */}
-        <>{renderPage()}</>
+          {/* New way to render pages, needed for more than 2 pages */}
+          {/* <SafeAreaView style={styles.container}> */}
+          <View style={styles.topBorder}>
+            {renderPage()}
+          </View>
+          {/* </SafeAreaView> */}
+          {/* SafeAreaView wraps around whatever element is rendered here, so there's no need to */}
+          {/* include its use in every element */}
 
-      </View>
-      {/* Footer tabs */}
-      <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
-          onPress={() => setActiveTab('Menu')}
-        >
-          <Text style={[styles.tabText, activeTab === 'Menu' && styles.activeTabText]}>
-            Menu
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'Rewards' && styles.activeTab]}
-          onPress={() => setActiveTab('Rewards')}
-        >
-          <Text style={[styles.tabText, activeTab === 'Rewards' && styles.activeTabText]}>
-            Rewards
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
-          onPress={() => setActiveTab('OrderSummary')}
-        // disabled={cart.length === 0}
-        >
-          <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
-            Cart {cart.length > 0 && `(${cart.length})`}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
-          onPress={() => setActiveTab('Profile')}
-        >
-          <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
-            Profile
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {/* </SafeAreaView> */}
+        </View>
+        {/* Footer tabs */}
+        <View style={styles.tabBar}>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
+            onPress={() => setActiveTab('Menu')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Menu' && styles.activeTabText]}>
+              Menu
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Rewards' && styles.activeTab]}
+            onPress={() => setActiveTab('Rewards')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Rewards' && styles.activeTabText]}>
+              Rewards
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
+            onPress={() => setActiveTab('OrderSummary')}
+          // disabled={cart.length === 0}
+          >
+            <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
+              Cart {cart.length > 0 && `(${cart.length})`}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
+            onPress={() => setActiveTab('Profile')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
+              Profile
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </SafeAreaProvider >
   );
 }
@@ -229,6 +235,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  topBorder: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderTopColor: '#e9ecef',
   },
   content: {
     flex: 1,

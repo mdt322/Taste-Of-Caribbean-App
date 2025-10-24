@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, StyleSheet } from 'react-native';
 import OrderSummary from '../components/checkout/OrderSummary';
 import Checkout from '../components/checkout/Checkout';
 
@@ -31,38 +31,77 @@ const CartScreen = ({
 
   const [showCheckout, setShowCheckout] = useState(false);
 
-  if (showCheckout) {
-    return (
-      <Checkout
-        cart={cart}
-        subtotal={subtotal}
-        tax={tax}
-        deliveryFee={deliveryFee}
-        total={total}
-        onBack={() => setShowCheckout(false)}
-        onOrderComplete={() => {
-          setShowCheckout(false);
-          if (onOrderComplete) {
-            onOrderComplete();
-          }
-        }}
-        user={user}
-      />
-    );
-  }
-
   return (
-    <OrderSummary
-      items={cart}
-      subtotal={subtotal}
-      tax={tax}
-      deliveryFee={deliveryFee}
-      total={total}
-      onIncrease={onIncrease || (() => console.log('Increase'))}
-      onDecrease={onDecrease || (() => console.log('Decrease'))}
-      onCheckout={() => setShowCheckout(true)}
-    />
+    <View style={styles.container}>
+      {showCheckout ? (
+        <Checkout
+          cart={cart}
+          subtotal={subtotal}
+          tax={tax}
+          deliveryFee={deliveryFee}
+          total={total}
+          onBack={() => setShowCheckout(false)}
+          onOrderComplete={() => {
+            setShowCheckout(false);
+            if (onOrderComplete) {
+              onOrderComplete();
+            }
+          }}
+          user={user}
+        />
+      ) : (
+        <OrderSummary
+          items={cart}
+          subtotal={subtotal}
+          tax={tax}
+          deliveryFee={deliveryFee}
+          total={total}
+          onIncrease={onIncrease || (() => console.log('Increase'))}
+          onDecrease={onDecrease || (() => console.log('Decrease'))}
+          onCheckout={() => setShowCheckout(true)}
+        />
+      )
+      }
+    </View>
   );
+  // if (showCheckout) {
+  //   return (
+  //     <Checkout
+  //       cart={cart}
+  //       subtotal={subtotal}
+  //       tax={tax}
+  //       deliveryFee={deliveryFee}
+  //       total={total}
+  //       onBack={() => setShowCheckout(false)}
+  //       onOrderComplete={() => {
+  //         setShowCheckout(false);
+  //         if (onOrderComplete) {
+  //           onOrderComplete();
+  //         }
+  //       }}
+  //       user={user}
+  //     />
+  //   );
+  // }
+
+  // return (
+  //   <OrderSummary
+  //     items={cart}
+  //     subtotal={subtotal}
+  //     tax={tax}
+  //     deliveryFee={deliveryFee}
+  //     total={total}
+  //     onIncrease={onIncrease || (() => console.log('Increase'))}
+  //     onDecrease={onDecrease || (() => console.log('Decrease'))}
+  //     onCheckout={() => setShowCheckout(true)}
+  //   />
+  // );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+
+  }
+});
 export default CartScreen;

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
+// import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
-  StatusBar,
   TouchableOpacity,
   Alert,
   ScrollView,
@@ -65,8 +64,8 @@ const RewardsScreen = ({ user, onAddToCart, cart = [] }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <>
+
 
       {/* Header */}
       <View style={styles.header}>
@@ -111,7 +110,7 @@ const RewardsScreen = ({ user, onAddToCart, cart = [] }) => {
           : merchRewards.map(renderRewardCard)
         }
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -126,11 +125,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e1e8ed',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 4,
+    // elevation: 3,
   },
   headerTitle: {
     fontSize: 28,

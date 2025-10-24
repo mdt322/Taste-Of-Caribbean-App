@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { saveOrder } from '../../utils/orderStorage';
 
@@ -16,22 +17,22 @@ const generateTimeSlots = () => {
   const now = new Date();
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
-  
+
   // Start from the next 30-minute slot
   let startHour = currentHour;
   let startMinute = currentMinute >= 30 ? 0 : 30;
   if (currentMinute >= 30) startHour += 1;
-  
+
   // Generate slots for the next 3 hours
   for (let h = 0; h < 6; h++) {
-    const hour = (startHour + Math.floor(h/2)) % 24;
+    const hour = (startHour + Math.floor(h / 2)) % 24;
     const minute = (h % 2 === 0) ? startMinute : (startMinute + 30) % 60;
     if (minute === 0 && h !== 0) continue; // Skip if it's exactly on the hour (except first slot)
-    
+
     const timeString = `${hour % 12 || 12}:${minute.toString().padStart(2, '0')} ${hour < 12 ? 'AM' : 'PM'}`;
     slots.push(timeString);
   }
-  
+
   return slots;
 };
 
@@ -62,13 +63,13 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
       };
 
       await saveOrder(order);
-      
+
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       setIsLoading(false);
       setShowSuccess(true);
-      
+
       // After 2 seconds, close success message and reset cart
       setTimeout(() => {
         setShowSuccess(false);
@@ -230,7 +231,8 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    // <SafeAreaView style={styles.container}>
+    <>
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <MaterialIcons name="arrow-back" size={24} color="#2e8b57" />
@@ -243,8 +245,8 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
         {renderTimeSelection()}
         {renderCartSummary()}
         {renderLoyaltyPoints()}
-        <TouchableOpacity 
-          style={[styles.applePayButton, (!selectedTime || isLoading) && styles.applePayButtonDisabled]} 
+        <TouchableOpacity
+          style={[styles.applePayButton, (!selectedTime || isLoading) && styles.applePayButtonDisabled]}
           onPress={handlePayment}
           disabled={!selectedTime || isLoading}
         >
@@ -271,7 +273,8 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
           </View>
         </Modal>
       </ScrollView>
-    </SafeAreaView>
+      {/* </SafeAreaView> */}
+    </>
   );
 };
 

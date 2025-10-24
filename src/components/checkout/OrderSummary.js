@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, onDecrease, onCheckout }) => {
   if (items.length === 0) {
@@ -12,7 +13,8 @@ const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, on
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    // <SafeAreaView style={styles.container}>
+    <>
       <Text style={styles.title}>Order Summary</Text>
       <ScrollView style={styles.itemList}>
         {items.map((item) => (
@@ -75,7 +77,8 @@ const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, on
           <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      {/* </SafeAreaView> */}
+    </>
   );
 };
 

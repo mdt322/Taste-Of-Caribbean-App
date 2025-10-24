@@ -21,7 +21,8 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+// import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useMenu } from '../../hooks/useMenu.js';
 
 const Menu = ({ addToCart }) => {
@@ -30,17 +31,17 @@ const Menu = ({ addToCart }) => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.centered}>
+      <View style={styles.centered}>
         <Text>Loading menu...</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (error) {
     return (
-      <SafeAreaView style={styles.centered}>
+      <View style={styles.centered}>
         <Text>Error: {error.message}</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -64,7 +65,7 @@ const Menu = ({ addToCart }) => {
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemPrice}>${typeof item.price === 'number' ? item.price.toFixed(2) : item.price.replace('$', '')}</Text>
         <Text style={styles.itemDescription}>{item.description}</Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.addToCartButton}
           onPress={() => addToCart(item)}
         >
@@ -75,7 +76,7 @@ const Menu = ({ addToCart }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <View style={styles.header}>
         <Text style={styles.title}>Menu</Text>
         <View style={styles.categories}>
@@ -99,14 +100,14 @@ const Menu = ({ addToCart }) => {
         numColumns={2}
         contentContainerStyle={styles.menuList}
       />
-    </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f9fa',
   },
   centered: {
     flex: 1,

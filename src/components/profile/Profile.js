@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+// import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import OrderHistory from './OrderHistory';
 import SettingsScreen from '../../screens/SettingsScreen';
 
@@ -61,7 +62,7 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
     if (user) {
         // Logged in user profile
         return (
-            <SafeAreaView style={styles.container}>
+            <>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
                     {/* Header with user info */}
@@ -162,13 +163,13 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
 
                     <View style={styles.bottomSpacing} />
                 </ScrollView>
-            </SafeAreaView>
+            </>
         );
     }
 
     // Not logged in view
     return (
-        <SafeAreaView style={styles.container}>
+        <>
             {/* Header */}
             <View style={styles.headerNotLoggedIn}>
                 <Text style={styles.title}>Welcome to Taste of Caribbean</Text>
@@ -225,7 +226,7 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                     </TouchableOpacity>
                 </View>
             </View>
-        </SafeAreaView>
+        </>
     );
 };
 
@@ -248,8 +249,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         backgroundColor: '#fff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e9ecef',
+
     },
     avatarContainer: {
         marginRight: 16,
