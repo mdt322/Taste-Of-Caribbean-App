@@ -5,6 +5,7 @@ import Menu from './src/components/menu/Menu';
 import CartScreen from './src/screens/CartScreen';
 import Profile from './src/components/profile/Profile';
 import AuthModal from './src/components/authmodal/AuthModal';
+import RewardsScreen from './src/screens/RewardsScreen';
 
 export default function App() {
   const [cart, setCart] = useState([]);
@@ -110,6 +111,7 @@ export default function App() {
             setActiveTab('Menu');
           }}
           user={user}
+          navigation={{ navigate: (screen) => setActiveTab(screen) }}
         />
       case 'Profile':
         return <Profile
@@ -117,7 +119,16 @@ export default function App() {
           setAuthFlag={setAuthFlag}
           setAuthMode={setAuthMode}
           onLogout={handleLogout}
+          navigation={{ navigate: (screen) => setActiveTab(screen) }}
         />
+      case 'Rewards':
+        return <RewardsScreen
+          user={user}
+          onAddToCart={addToCart}
+          cart={cart}
+        />
+      default:
+        return <Menu addToCart={addToCart} />
     };
   };
 
@@ -181,6 +192,14 @@ export default function App() {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          style={[styles.tab, activeTab === 'Rewards' && styles.activeTab]}
+          onPress={() => setActiveTab('Rewards')}
+        >
+          <Text style={[styles.tabText, activeTab === 'Rewards' && styles.activeTabText]}>
+            Rewards
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
           onPress={() => setActiveTab('OrderSummary')}
         // disabled={cart.length === 0}
@@ -225,14 +244,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 2, // Add some padding between tabs
   },
   activeTab: {
     borderTopWidth: 2,
     borderTopColor: '#ffb300',
   },
   tabText: {
-    fontSize: 20,
+    fontSize: 14, // Reduced from 20 to fit 4 tabs
     color: '#666',
+    textAlign: 'center',
   },
   activeTabText: {
     color: '#ffb300',

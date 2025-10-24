@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import OrderHistory from './OrderHistory';
 
-const Profile = ({ user, setAuthFlag, setAuthMode, onLogout }) => {
+const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, navigation }) => {
     const [showOrderHistory, setShowOrderHistory] = useState(false);
     const setToRegister = () => {
         setAuthFlag(true);
@@ -108,7 +108,10 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout }) => {
                                 <Text style={styles.actionIcon}>📋</Text>
                                 <Text style={styles.actionText}>Order History</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.actionCard}>
+                            <TouchableOpacity
+                                style={styles.actionCard}
+                                onPress={() => navigation?.navigate('Rewards')}
+                            >
                                 <Text style={styles.actionIcon}>🎁</Text>
                                 <Text style={styles.actionText}>Rewards</Text>
                             </TouchableOpacity>
@@ -464,8 +467,6 @@ const styles = StyleSheet.create({
         color: '#6c757d',
         lineHeight: 20,
     },
-
-    // Actions container
     actionsContainer: {
         padding: 16,
     },
