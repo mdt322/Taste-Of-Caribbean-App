@@ -37,13 +37,13 @@ const handleLogin = async () => {
 
     setStatusMessage('Login successful!');
     if (onLoginSuccess) {
-          onLoginSuccess({ email, token: data.token }); // Pass email to parent component
+      onLoginSuccess(email);
     }
 
     // Hide status after 2 seconds and close modal
     setTimeout(() => {
       setShowStatus(false);
-        setAuthFlag(false); // Close auth modal after successful login
+      setAuthFlag(false); // Close auth modal after successful login
       setLoading(false);
     }, 2000);
 
