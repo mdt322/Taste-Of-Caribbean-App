@@ -10,51 +10,58 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
 
-const handleLogin = async () => {
-  if (!email || !password) {
-    Alert.alert('Error', 'Please fill in all fields');
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setStatusMessage('Logging in...');
-    setShowStatus(true);
-// here we fetch credentials from rds mysql database 
-    const response = await fetch('http://localhost:5001/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Login failed');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
     }
 
-    setStatusMessage('Login successful!');
-    if (onLoginSuccess) {
-      onLoginSuccess(email);
-    }
+    try {
+      setLoading(true);
+      setStatusMessage('Logging in...');
+      setShowStatus(true);
+      // here we fetch credentials from rds mysql database 
+      const response = await fetch('http://localhost:5001/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // Hide status after 2 seconds and close modal
-    setTimeout(() => {
-      setShowStatus(false);
-      setAuthFlag(false); // Close auth modal after successful login
-      setLoading(false);
-    }, 2000);
+      const data = await response.json();
 
-  } catch (error) {
-    setStatusMessage('Login failed');
-    setTimeout(() => setShowStatus(false), 2000);
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      setStatusMessage('Login successful!');
+      if (onLoginSuccess) {
+        onLoginSuccess(email);
+      }
+
+      // Hide status after 2 seconds and close modal
+      setTimeout(() => {
+        setShowStatus(false);
+        setAuthFlag(false); // Close auth modal after successful login
+        setLoading(false);
+      }, 2000);
+
+    } catch (error) {
+      // setStatusMessage('Login failed');
+      // setTimeout(() => {
+      //   setShowStatus(false);
+      //   setLoading(false);
+      // }, 2000);
+      //----------------
+      //Code above line is replaced with below, much cleaner, enables editing of fields after network error
       Alert.alert('Login Failed', error.message);
+      setShowStatus(false);
+      setLoading(false);
     } finally {
       // setLoading(false); // Moved up and into setTimeout()
-  }
-};
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -143,6 +150,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 15,
     fontSize: 16,
+    color: '#000000',
     backgroundColor: '#f9f9f9',
   },
   inputLoading: {
