@@ -10,40 +10,51 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
+const handleLogin = async () => {
+  if (!email || !password) {
+    Alert.alert('Error', 'Please fill in all fields');
+    return;
+  }
+
+  try {
+    setLoading(true);
+    setStatusMessage('Logging in...');
+    setShowStatus(true);
+// here we fetch credentials from rds mysql database 
+    const response = await fetch('http://localhost:5001/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Login failed');
     }
 
-    try {
-      setLoading(true);
-      setStatusMessage('Logging in...');
-      setShowStatus(true);
+    setStatusMessage('Login successful!');
+    if (onLoginSuccess) {
+          onLoginSuccess({ email, token: data.token }); // Pass email to parent component
+    }
 
-      // Simulate successful login (replace with actual Firebase auth)
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-
-      setStatusMessage('Login successful!');
-      if (onLoginSuccess) {
-        onLoginSuccess(email); // Pass email to parent component
-      }
-
-      // Hide status after 2 seconds and close modal
-      setTimeout(() => {
-        setShowStatus(false);
+    // Hide status after 2 seconds and close modal
+    setTimeout(() => {
+      setShowStatus(false);
         setAuthFlag(false); // Close auth modal after successful login
-        setLoading(false);
-      }, 2000);
+      setLoading(false);
+    }, 2000);
 
-    } catch (error) {
-      setStatusMessage('Login failed');
-      setTimeout(() => setShowStatus(false), 2000);
+  } catch (error) {
+    setStatusMessage('Login failed');
+    setTimeout(() => setShowStatus(false), 2000);
       Alert.alert('Login Failed', error.message);
     } finally {
       // setLoading(false); // Moved up and into setTimeout()
-    }
-  };
+  }
+};
 
   return (
     <View style={styles.container}>

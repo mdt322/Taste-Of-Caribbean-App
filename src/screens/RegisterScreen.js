@@ -12,47 +12,62 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
 
-  const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
+const handleRegister = async () => {
+  if (!name || !email || !password || !confirmPassword) {
+    Alert.alert('Error', 'Please fill in all fields');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    Alert.alert('Error', 'Passwords do not match');
+    return;
+  }
+
+  try {
+    setLoading(true);
+    setStatusMessage('Creating account...');
+    setShowStatus(true);
+// here we are sending response to rds mysql database
+    const response = await fetch('http://localhost:5001/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        full_name: name,
+        email: email,
+        password: password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Registration failed');
     }
 
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
+    setStatusMessage('Registration successful!');
+    if (onRegisterSuccess) {
+      onRegisterSuccess({ name, email }); // Pass user data to parent component
     }
 
-    try {
-      setLoading(true);
-      setStatusMessage('Creating account...');
-      setShowStatus(true);
-
-      // Simulate successful registration (replace with actual Firebase auth)
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-
-      setStatusMessage('Registration successful!');
-      if (onRegisterSuccess) {
-        onRegisterSuccess({ name, email }); // Pass user data to parent component
-      }
-
-      // Hide status after 2 seconds and close modal
-      setTimeout(() => {
-        setShowStatus(false);
-        setAuthFlag(false); // Close auth modal after successful registration
-        setAuthMode('Sign In'); //Sets Authentication Modal to default state
+    // Hide status after 2 seconds and close modal
+    setTimeout(() => {
+      setShowStatus(false);
+      setAuthFlag(false); // Close auth modal after successful registration
+      setAuthMode('Sign In'); //Sets Authentication Modal to default state
         setLoading(false); // Prevents button from being pressed after successful registration
-      }, 2000);
+    }, 2000);
+    
 
-
-    } catch (error) {
-      setStatusMessage('Registration failed');
-      setTimeout(() => setShowStatus(false), 2000);
-      Alert.alert('Registration Failed', error.message);
+  } catch (error) {
+    setStatusMessage('Registration failed');
+    setTimeout(() => setShowStatus(false), 2000);
+    Alert.alert('Registration Failed', error.message);
     } finally {
       // setLoading(false); // Moved up and into to setTimeout()
-    }
-  };
+  }
+};
 
   return (
     <View style={styles.container}>
