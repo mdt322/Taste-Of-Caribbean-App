@@ -2,8 +2,8 @@ version: "1.0"
 
 services:
   backend_server:
-    image: [SERVERNAME] # Use the image you already built
-    container_name: [SERVERNAME]
+    image: backend_server # Use the image you already built
+    container_name: backend_server
     build:
       context: .
       dockerfile: Dockerfile
