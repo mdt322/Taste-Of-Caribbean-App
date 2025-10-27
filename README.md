@@ -1,4 +1,5 @@
 # Taste of Caribbean App
+
 A food ordering app inspired by Caribbean cuisine.
 
 ## Project Overview
@@ -16,28 +17,35 @@ Taste of Caribbean is a mobile food ordering application built with React Native
 
 ## Getting Started
 
-### How to Run the Project
+### How to Run the Project: frontend
 
 1. Install dependencies:
    ```bash
    npm install
    ```
-2. Create .env file with the following content, which is needed for the menu and other elements to load:
-   ```
-   REACT_APP_FIREBASE_API_KEY='AIzaSyAPD9aOi7WH6ZjB7nRQzU5u7FNzlIqLHE0'
-   # REACT_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain-here #placeholder for something
-   REACT_APP_FIREBASE_PROJECT_ID='toc-menu-data'
-   REACT_APP_FIREBASE_STORAGE_BUCKET='toc-menu-data.appspot.com'
-   REACT_APP_FIREBASE_MESSAGING_SENDER_ID='1034732460799'
-   REACT_APP_FIREBASE_APP_ID='1:1034732460799:ios:efceffced500d5c2614aca'
-   ```
-4. Run the following in the terminal to start the application and a QR code will be generated in the terminal:
+2. Create .env file using the .env.example file provided in the main directory of the project (for db credentials, contact project manager).
+3. Run the following in the terminal to start the application and a QR code will be generated in the terminal:
    ```bash
    npx expo start
    ```
-5. Proceed to the Expo Go and scan the generated QR code. It may prompt you to install an older version of Expo Go to test the app if you're testing it on Android. It will give you instructions and an APK file to install.
+4. Proceed to the Expo Go and scan the generated QR code. It may prompt you to install an older version of Expo Go to test the app if you're testing it on Android. It will give you instructions and an APK file to install.
 
 **Note:** Make sure to check `package.json` and `package-lock.json` to ensure the dependencies are updated.
+
+### How to Run the Project: backend
+
+1. Install Node.js v20+ from https://nodejs.org
+2. Install Docker Desktop from https://www.docker.com/products/docker-desktop
+3. Globally install Expo-CLI
+   ```bash
+   npm install -g expo-cli
+   ```
+4. Navigate to the backend folder "server" and use each .example file to set up the environment for docker (database credentials go into .env, contact project manager)
+5. Run the following commands in the terminal with "server" as the current directory:
+   ```bash
+   docker-compose down
+   docker-compose up --build
+   ```
 
 ### Project Structure
 

@@ -27,6 +27,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       setLoading(true);
       setStatusMessage('Creating account...');
       setShowStatus(true);
+
       // here we are sending response to rds mysql database
       const response = await fetch('http://localhost:5001/api/auth/register', {
         method: 'POST',
@@ -64,7 +65,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       // setStatusMessage('Registration failed');
       // setTimeout(() => setShowStatus(false), 2000);
       //----------------
-      //Code above line is replaced with below, much cleaner, enables editing of fields after network error
+      //Code above line is replaced with below, enables editing of fields after network error
       Alert.alert('Registration Failed', error.message);
       setShowStatus(false);
       setLoading(false);
