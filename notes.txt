@@ -1,0 +1,21 @@
+Frontend:
+cd into app
+Taste-Of-Caribbean-App
+
+Start frontend:
+
+npx expo start
+
+backend
+cd into server
+Taste-Of-Caribbean-App/server
+
+Stop if there are any docker containers running
+
+docker-compose down
+
+This command will build and run the docker file. 
+
+docker-compose up --build
+
+
