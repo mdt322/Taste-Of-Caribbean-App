@@ -21,7 +21,8 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
       setStatusMessage('Logging in...');
       setShowStatus(true);
 
-      // here we fetch credentials from rds mysql database 
+      // here we fetch credentials from rds mysql database
+      // ***IMPORTANT*** change localhost to your machine's local IP address when testing app on mobile device
       const response = await fetch('http://localhost:5001/api/auth/login', {
         method: 'POST',
         headers: {
@@ -49,13 +50,6 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
       }, 2000);
 
     } catch (error) {
-      // setStatusMessage('Login failed');
-      // setTimeout(() => {
-      //   setShowStatus(false);
-      //   setLoading(false);
-      // }, 2000);
-      //----------------
-      //Code above line is replaced with below, enables editing of fields after network error
       Alert.alert('Login Failed', error.message);
       setShowStatus(false);
       setLoading(false);
