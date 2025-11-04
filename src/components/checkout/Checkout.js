@@ -86,7 +86,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Store Location</Text>
       <View style={styles.locationCard}>
-        <MaterialIcons name="location-on" size={24} color="#2e8b57" />
+        <MaterialIcons name="location-on" size={19} color="#2e8b57" />
         <View style={styles.locationDetails}>
           <Text style={styles.address}>{STORE_LOCATION.address}</Text>
           <Text style={styles.address}>
@@ -234,10 +234,12 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
     // <SafeAreaView style={styles.container}>
     <>
       <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <MaterialIcons name="arrow-back" size={24} color="#2e8b57" />
+        <TouchableOpacity onPress={onBack} style={styles.backButtonContainer}>
+          <MaterialIcons name="arrow-back" size={22} color='#2e8b57' />
+          <Text style={styles.backButtonText}>
+            Back
+          </Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Checkout</Text>
       </View>
       <ScrollView style={styles.content}>
         {renderStoreLocation()}
@@ -351,24 +353,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: 13,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
-  backButton: {
-    marginRight: 16,
-    padding: 4,
+  backButtonContainer: {
+    flexDirection: 'row',
+    marginRight: 'auto',
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
+  backButtonText: {
+    padding: 4,
+    fontSize: 19,
+    color: '#2e8b57',
   },
   content: {
     flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 10,
   },
   section: {
     backgroundColor: '#fff',

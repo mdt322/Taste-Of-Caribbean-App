@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useMerch } from '../../hooks/useMerch';
 
-const Merch = ({ addToCart }) => {
+const Merch = ({ addToCart, setCartFlag, cart }) => {
     const { merchItems, loading, error } = useMerch();
     // const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -49,9 +49,20 @@ const Merch = ({ addToCart }) => {
 
     return (
         <>
+            {/* Floating cart button */}
+            <TouchableOpacity
+                style={styles.floatingCartButton}
+                onPress={() => setCartFlag(true)}
+            >
+                <Text>
+                    Cart {cart.length > 0 && `${cart.length}`}
+                </Text>
+            </TouchableOpacity>
+
             <View style={styles.header}>
                 <Text style={styles.title}>Merch</Text>
             </View>
+
             <FlatList
                 data={merchItems}
                 renderItem={renderItem}
@@ -146,6 +157,17 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#666',
         marginBottom: 8,
+    },
+    floatingCartButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        backgroundColor: '#f5981eff',
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 5,
+        elevation: 5,
     },
 });
 

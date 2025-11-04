@@ -25,7 +25,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react
 // import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useMenu } from '../../hooks/useMenu.js';
 
-const Menu = ({ addToCart }) => {
+const Menu = ({ addToCart, setCartFlag, cart }) => {
   const { menuItems, loading, error } = useMenu();
   const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -77,6 +77,16 @@ const Menu = ({ addToCart }) => {
 
   return (
     <>
+      {/* Floating cart button */}
+      <TouchableOpacity
+        style={styles.floatingCartButton}
+        onPress={() => setCartFlag(true)}
+      >
+        <Text>
+          Cart {cart.length > 0 && `${cart.length}`}
+        </Text>
+      </TouchableOpacity>
+
       <View style={styles.header}>
         <Text style={styles.title}>Menu</Text>
         <View style={styles.categories}>
@@ -93,6 +103,7 @@ const Menu = ({ addToCart }) => {
           ))}
         </View>
       </View>
+
       <FlatList
         data={filteredItems}
         renderItem={renderItem}
@@ -209,6 +220,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginBottom: 8,
+  },
+  floatingCartButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#f5981eff',
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+    elevation: 5,
   },
 });
 

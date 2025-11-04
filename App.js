@@ -20,6 +20,9 @@ export default function App() {
   const [authMode, setAuthMode] = useState('Sign In');
   const [user, setUser] = useState(null); // User authentication state
 
+  // cartFlag determines whether the pop up for cart screen appears
+  const [cartFlag, setCartFlag] = useState(false);
+
   const addToCart = (item) => {
     setCart((prevCart) => {
       const existing = prevCart.find((i) => i.id === item.id);
@@ -96,34 +99,34 @@ export default function App() {
         return <Home />
 
       case 'Menu':
-        return <Menu addToCart={addToCart} />
+        return <Menu addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
 
       // Following must be removed
-      case 'OrderSummary':
-        return <CartScreen
-          cart={cart}
-          {...calculateTotal()}
-          onIncrease={(id) => updateQuantity(id, 1)}
-          onDecrease={(id) => updateQuantity(id, -1)}
-          onOrderComplete={() => {
-            // Award loyalty points to signed-in users
-            if (user) {
-              const pointsEarned = Math.floor(calculateTotal().total);
-              setUser(prevUser => ({
-                ...prevUser,
-                loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
-              }));
-            }
+      // case 'OrderSummary':
+      //   return <CartScreen
+      //     cart={cart}
+      //     {...calculateTotal()}
+      //     onIncrease={(id) => updateQuantity(id, 1)}
+      //     onDecrease={(id) => updateQuantity(id, -1)}
+      //     onOrderComplete={() => {
+      //       // Award loyalty points to signed-in users
+      //       if (user) {
+      //         const pointsEarned = Math.floor(calculateTotal().total);
+      //         setUser(prevUser => ({
+      //           ...prevUser,
+      //           loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
+      //         }));
+      //       }
 
-            setCart([]);
-            setActiveTab('Menu');
-          }}
-          user={user}
-          navigation={{ navigate: (screen) => setActiveTab(screen) }}
-        />
+      //       setCart([]);
+      //       setActiveTab('Menu');
+      //     }}
+      //     user={user}
+      //     navigation={{ navigate: (screen) => setActiveTab(screen) }}
+      //   />
 
       case 'Merch':
-        return <Merch addToCart={addToCart} />
+        return <Merch addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
 
       case 'More':
         return <Profile
@@ -161,6 +164,39 @@ export default function App() {
             setAuthMode={setAuthMode}
             onLoginSuccess={handleLoginSuccess}
             onRegisterSuccess={handleRegisterSuccess}
+          />
+        </Modal>
+
+        <Modal
+          visible={cartFlag}
+          animationType="slide"
+        >
+          <View style={styles.cartModalHeader}>
+            <Text style={styles.cartModalTitle}>Cart</Text>
+            <TouchableOpacity onPress={() => setCartFlag(false)}>
+              <Text style={styles.modalCloseButton}>X</Text>
+            </TouchableOpacity>
+          </View>
+          <CartScreen
+            cart={cart}
+            {...calculateTotal()}
+            onIncrease={(id) => updateQuantity(id, 1)}
+            onDecrease={(id) => updateQuantity(id, -1)}
+            onOrderComplete={() => {
+              // Award loyalty points to signed-in users
+              if (user) {
+                const pointsEarned = Math.floor(calculateTotal().total);
+                setUser(prevUser => ({
+                  ...prevUser,
+                  loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
+                }));
+              }
+
+              setCart([]);
+              setActiveTab('Menu');
+            }}
+            user={user}
+            navigation={{ navigate: (screen) => setActiveTab(screen) }}
           />
         </Modal>
 
@@ -269,6 +305,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  cartModalHeader: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cartModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  modalCloseButton: {
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   topBorder: {
     flex: 1,
