@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, Modal, Button, View, StatusBar } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Home from './src/components/home/Home';
 import Menu from './src/components/menu/Menu';
+import Merch from './src/components/merch/Merch';
 import CartScreen from './src/screens/CartScreen';
 import Profile from './src/components/profile/Profile';
 import AuthModal from './src/components/authmodal/AuthModal';
@@ -9,7 +11,7 @@ import RewardsScreen from './src/screens/RewardsScreen';
 
 export default function App() {
   const [cart, setCart] = useState([]);
-  const [activeTab, setActiveTab] = useState('Menu');
+  const [activeTab, setActiveTab] = useState('Home');
 
   // authFlag determines whether the pop up for authentication appears
   const [authFlag, setAuthFlag] = useState(false);
@@ -89,8 +91,14 @@ export default function App() {
   // Renders page in main screen depending on activeTab
   const renderPage = () => {
     switch (activeTab) {
+
+      case 'Home':
+        return <Home />
+
       case 'Menu':
         return <Menu addToCart={addToCart} />
+
+      // Following must be removed
       case 'OrderSummary':
         return <CartScreen
           cart={cart}
@@ -113,7 +121,11 @@ export default function App() {
           user={user}
           navigation={{ navigate: (screen) => setActiveTab(screen) }}
         />
-      case 'Profile':
+
+      case 'Merch':
+        return <Merch />
+
+      case 'More':
         return <Profile
           user={user}
           setAuthFlag={setAuthFlag}
@@ -187,8 +199,20 @@ export default function App() {
           {/* include its use in every element */}
 
         </View>
+
         {/* Footer tabs */}
+        {/* Home tab */}
         <View style={styles.tabBar}>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Home' && styles.activeTab]}
+            onPress={() => setActiveTab('Home')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}>
+              Home
+            </Text>
+          </TouchableOpacity>
+
+          {/* Menu tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
             onPress={() => setActiveTab('Menu')}
@@ -197,6 +221,22 @@ export default function App() {
               Menu
             </Text>
           </TouchableOpacity>
+
+          {/* Order tab/Cart is removed and replaced with */}
+          {/* Merch tab */}
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Merch' && styles.activeTab]}
+            onPress={() => setActiveTab('Merch')}
+          // disabled={cart.length === 0}
+          >
+            <Text style={[styles.tabText, activeTab === 'Merch' && styles.activeTabText]}>
+              Merch
+              {/* Following logic is to be used in Menu and Merch pages */}
+              {/* Cart {cart.length > 0 && `(${cart.length})`} */}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Rewards tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Rewards' && styles.activeTab]}
             onPress={() => setActiveTab('Rewards')}
@@ -205,21 +245,15 @@ export default function App() {
               Rewards
             </Text>
           </TouchableOpacity>
+
+          {/* Profile tab renamed to */}
+          {/* More tab */}
           <TouchableOpacity
-            style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
-            onPress={() => setActiveTab('OrderSummary')}
-          // disabled={cart.length === 0}
+            style={[styles.tab, activeTab === 'More' && styles.activeTab]}
+            onPress={() => setActiveTab('More')}
           >
-            <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
-              Cart {cart.length > 0 && `(${cart.length})`}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
-            onPress={() => setActiveTab('Profile')}
-          >
-            <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
-              Profile
+            <Text style={[styles.tabText, activeTab === 'More' && styles.activeTabText]}>
+              More
             </Text>
           </TouchableOpacity>
         </View>
