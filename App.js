@@ -93,7 +93,7 @@ export default function App() {
     switch (activeTab) {
 
       case 'Home':
-        return <Home addToCart={addToCart} />
+        return <Home />
 
       case 'Menu':
         return <Menu addToCart={addToCart} />
@@ -123,7 +123,7 @@ export default function App() {
         />
 
       case 'Merch':
-        return <Merch />
+        return <Merch addToCart={addToCart} />
 
       case 'More':
         return <Profile

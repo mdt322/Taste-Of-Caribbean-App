@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
         margin: 8,
         backgroundColor: '#fff',
         borderRadius: 12,
+        maxWidth: '45%',
         overflow: 'hidden',
         elevation: 2,
         shadowColor: '#000',
