@@ -82,8 +82,8 @@ const Menu = ({ addToCart, setCartFlag, cart }) => {
         style={styles.floatingCartButton}
         onPress={() => setCartFlag(true)}
       >
-        <Text>
-          Cart {cart.length > 0 && `${cart.length}`}
+        <Text style={styles.floatingCartButtonText}>
+          {'\u{1F6D2}'} {cart.length > 0 && `${cart.length}`}
         </Text>
       </TouchableOpacity>
 
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
   },
   menuList: {
     padding: 8,
+    paddingBottom: 80,
   },
   card: {
     flex: 1,
@@ -225,12 +226,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#f5981eff',
-    padding: 15,
+    height: 70,
+    width: 70,
+    borderRadius: 50,
+    backgroundColor: '#ffb300',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 5,
     elevation: 5,
+  },
+  floatingCartButtonText: {
+    color: '#ffffff',
+    fontSize: 27,
   },
 });
 
