@@ -101,30 +101,6 @@ export default function App() {
       case 'Menu':
         return <Menu addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
 
-      // Following must be removed
-      // case 'OrderSummary':
-      //   return <CartScreen
-      //     cart={cart}
-      //     {...calculateTotal()}
-      //     onIncrease={(id) => updateQuantity(id, 1)}
-      //     onDecrease={(id) => updateQuantity(id, -1)}
-      //     onOrderComplete={() => {
-      //       // Award loyalty points to signed-in users
-      //       if (user) {
-      //         const pointsEarned = Math.floor(calculateTotal().total);
-      //         setUser(prevUser => ({
-      //           ...prevUser,
-      //           loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
-      //         }));
-      //       }
-
-      //       setCart([]);
-      //       setActiveTab('Menu');
-      //     }}
-      //     user={user}
-      //     navigation={{ navigate: (screen) => setActiveTab(screen) }}
-      //   />
-
       case 'Merch':
         return <Merch addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
 
@@ -142,8 +118,6 @@ export default function App() {
           onAddToCart={addToCart}
           cart={cart}
         />
-      // default:
-      //   return <Menu addToCart={addToCart} />
     };
   };
 
@@ -152,8 +126,8 @@ export default function App() {
       {/* App screen content */}
       <SafeAreaView style={styles.appContainer}>
         <StatusBar barStyle="dark-content" />
-        {/* Modal pop up that shows sign in and registration page */}
 
+        {/* Modal pop up that shows sign in and registration page */}
         <Modal
           visible={authFlag}
           animationType="slide"
@@ -167,14 +141,15 @@ export default function App() {
           />
         </Modal>
 
+        {/* Modal pop up that shows the cart */}
         <Modal
           visible={cartFlag}
           animationType="slide"
         >
           <View style={styles.cartModalHeader}>
             <Text style={styles.cartModalTitle}>Cart</Text>
-            <TouchableOpacity onPress={() => setCartFlag(false)}>
-              <Text style={styles.modalCloseButton}>X</Text>
+            <TouchableOpacity onPress={() => setCartFlag(false)} style={styles.modalCloseButton} >
+              <Text style={styles.modalCloseButtonText}>X</Text>
             </TouchableOpacity>
           </View>
           <CartScreen
@@ -200,40 +175,10 @@ export default function App() {
           />
         </Modal>
 
-
-        {/* { signinFlag && 
-      <View style={styles.signinContainer}>
-        <SignIn setSigninFlag={setSigninFlag} />
-      </View>
-      } */}
-
         <View style={styles.content}>
-
-          {/* Old render page view */}
-          {/* {activeTab === 'Menu' ? (
-          <Menu addToCart={addToCart} />
-        ) : (
-          <CartScreen
-            cart={cart}
-            {...calculateTotal()}
-            onIncrease={(id) => updateQuantity(id, 1)}
-            onDecrease={(id) => updateQuantity(id, -1)}
-            onOrderComplete={() => {
-              setCart([]);
-              setActiveTab('Menu');
-            }}
-          />
-        )} */}
-
-          {/* New way to render pages, needed for more than 2 pages */}
-          {/* <SafeAreaView style={styles.container}> */}
           <View style={styles.topBorder}>
             {renderPage()}
           </View>
-          {/* </SafeAreaView> */}
-          {/* SafeAreaView wraps around whatever element is rendered here, so there's no need to */}
-          {/* include its use in every element */}
-
         </View>
 
         {/* Footer tabs */}
@@ -263,12 +208,9 @@ export default function App() {
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Merch' && styles.activeTab]}
             onPress={() => setActiveTab('Merch')}
-          // disabled={cart.length === 0}
           >
             <Text style={[styles.tabText, activeTab === 'Merch' && styles.activeTabText]}>
               Merch
-              {/* Following logic is to be used in Menu and Merch pages */}
-              {/* Cart {cart.length > 0 && `(${cart.length})`} */}
             </Text>
           </TouchableOpacity>
 
@@ -320,6 +262,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalCloseButton: {
+    height: 30,
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
     fontSize: 24,
     fontWeight: 'bold',
   },
