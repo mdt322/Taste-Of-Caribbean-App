@@ -30,7 +30,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
 
       // here we are sending response to rds mysql database
       // ***IMPORTANT*** change localhost to your machine's local IP address when testing app on mobile device
-      const response = await fetch('http://192.168.1.222:5001/api/auth/register', {
+      const response = await fetch('http://localhost:5001/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
