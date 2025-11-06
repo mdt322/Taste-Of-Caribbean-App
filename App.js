@@ -96,7 +96,13 @@ export default function App() {
     switch (activeTab) {
 
       case 'Home':
-        return <Home />
+        return (
+          <Home
+            user={user}
+            onNavigate={(screen) => setActiveTab(screen)}
+            onSignIn={() => setAuthFlag(true)}
+          />
+        )
 
       case 'Menu':
         return <Menu addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
