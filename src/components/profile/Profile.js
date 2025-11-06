@@ -35,6 +35,8 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
         return <OrderHistory onBack={() => setShowOrderHistory(false)} />;
     }
 
+    // This is where the privileged options will probably go
+
     // Show SettingsScreen component if requested
     if (showSettings) {
         return <SettingsScreen
