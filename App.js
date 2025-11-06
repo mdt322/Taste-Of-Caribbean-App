@@ -146,33 +146,35 @@ export default function App() {
           visible={cartFlag}
           animationType="slide"
         >
-          <View style={styles.cartModalHeader}>
-            <Text style={styles.cartModalTitle}>Cart</Text>
-            <TouchableOpacity onPress={() => setCartFlag(false)} style={styles.modalCloseButton} >
-              <Text style={styles.modalCloseButtonText}>X</Text>
-            </TouchableOpacity>
-          </View>
-          <CartScreen
-            cart={cart}
-            {...calculateTotal()}
-            onIncrease={(id) => updateQuantity(id, 1)}
-            onDecrease={(id) => updateQuantity(id, -1)}
-            onOrderComplete={() => {
-              // Award loyalty points to signed-in users
-              if (user) {
-                const pointsEarned = Math.floor(calculateTotal().total);
-                setUser(prevUser => ({
-                  ...prevUser,
-                  loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
-                }));
-              }
+          <View style={styles.cartModalContainer}>
+            <View style={styles.cartModalHeader}>
+              <Text style={styles.cartModalTitle}>Cart</Text>
+              <TouchableOpacity onPress={() => setCartFlag(false)} style={styles.modalCloseButton} >
+                <Text style={styles.modalCloseButtonText}>X</Text>
+              </TouchableOpacity>
+            </View>
+            <CartScreen
+              cart={cart}
+              {...calculateTotal()}
+              onIncrease={(id) => updateQuantity(id, 1)}
+              onDecrease={(id) => updateQuantity(id, -1)}
+              onOrderComplete={() => {
+                // Award loyalty points to signed-in users
+                if (user) {
+                  const pointsEarned = Math.floor(calculateTotal().total);
+                  setUser(prevUser => ({
+                    ...prevUser,
+                    loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
+                  }));
+                }
 
-              setCart([]);
-              setActiveTab('Menu');
-            }}
-            user={user}
-            navigation={{ navigate: (screen) => setActiveTab(screen) }}
-          />
+                setCart([]);
+                setActiveTab('Menu');
+              }}
+              user={user}
+              navigation={{ navigate: (screen) => setActiveTab(screen) }}
+            />
+          </View>
         </Modal>
 
         <View style={styles.content}>
@@ -247,6 +249,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  cartModalContainer: {
+    flex: 1,
   },
   cartModalHeader: {
     padding: 16,
