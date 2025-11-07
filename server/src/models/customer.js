@@ -19,3 +19,12 @@ export const findUserByEmail = async (email) => {
   );
   return rows[0];
 };
+
+// Update a user's password hash by email
+export const updateUserPassword = async (email, new_password_hash) => {
+  const [result] = await pool.execute(
+    'UPDATE customers SET password_hash = ? WHERE email = ?',
+    [new_password_hash, email]
+  );
+  return result;
+};
