@@ -147,16 +147,21 @@ export default function App() {
           />
         </Modal>
 
-        {/* Modal pop up that shows the cart */}
+        {/* Cart Modal */}
         <Modal
           visible={cartFlag}
           animationType="slide"
+          statusBarTranslucent={true}
         >
           <View style={styles.cartModalContainer}>
             <View style={styles.cartModalHeader}>
               <Text style={styles.cartModalTitle}>Cart</Text>
-              <TouchableOpacity onPress={() => setCartFlag(false)} style={styles.modalCloseButton} >
-                <Text style={styles.modalCloseButtonText}>X</Text>
+              <TouchableOpacity 
+                onPress={() => setCartFlag(false)}
+                style={styles.modalCloseButton}
+                hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+              >
+                <Text style={styles.modalCloseButtonText}>✕</Text>
               </TouchableOpacity>
             </View>
             <CartScreen
@@ -258,29 +263,38 @@ const styles = StyleSheet.create({
   },
   cartModalContainer: {
     flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 0,
+    marginTop: 0,
   },
   cartModalHeader: {
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    marginTop: 30, // Add margin to account for status bar
   },
   cartModalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginLeft: 10, // Add some left margin for better alignment
   },
   modalCloseButton: {
-    height: 30,
-    width: 30,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 5, // Add some right margin for better touch target
   },
   modalCloseButtonText: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#333',
   },
   topBorder: {
     flex: 1,
