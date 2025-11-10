@@ -31,15 +31,25 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      // Safely parse response body (avoid throwing on empty/non-JSON)
+      const text = await response.text();
+      let data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          data = null;
+        }
+      }
 
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error((data && data.message) ? data.message : 'Login failed');
       }
 
       setStatusMessage('Login successful!');
       if (onLoginSuccess) {
-        onLoginSuccess(email);
+        // Pass server-provided user object to parent
+        onLoginSuccess((data && data.user) ? data.user : { email });
       }
 
       // Hide status after 2 seconds and close modal

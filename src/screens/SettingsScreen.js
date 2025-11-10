@@ -348,10 +348,19 @@ const PasswordResetScreen = ({ user, onBack, navigation, colors, theme }) => {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      // Safely parse response body
+      const text = await response.text();
+      let data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          data = null;
+        }
+      }
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to update password');
+        throw new Error((data && data.message) ? data.message : 'Failed to update password');
       }
 
       Alert.alert('Success', 'Your password has been successfully updated!', [

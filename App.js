@@ -36,6 +36,13 @@ export default function App() {
   };
 
   const updateQuantity = (itemId, change) => {
+    // Use current cart snapshot to determine if we're removing a reward item so we can refund points
+    const target = cart.find((i) => i.id === itemId);
+    const currentQty = target?.quantity || 0;
+    const newQty = Math.max(0, currentQty + change);
+    const willBeRemoved = target && newQty === 0;
+
+    // Update local cart immediately
     setCart((prevCart) =>
       prevCart
         .map((item) =>
@@ -45,12 +52,45 @@ export default function App() {
         )
         .filter((item) => item.quantity > 0)
     );
+
+    // If a reward item is removed (user canceled redemption before checkout), refund points
+    if (willBeRemoved && target?.points && user?.email) {
+      // Calculate points to refund (points * quantity)
+      const pointsToRefund = (target.quantity || 1) * (target.points || 0);
+      // fire-and-forget: refund on server and update local user state when done
+      (async () => {
+        try {
+          const res = await fetch('http://localhost:5001/api/rewards/refund', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: String(user.email).trim().toLowerCase(), points: pointsToRefund })
+          });
+          const text = await res.text();
+          let json = null;
+          if (text) {
+            try { json = JSON.parse(text); } catch (e) { json = null; }
+          }
+          if (res.ok && json && json.user) {
+            setUser(prev => prev ? { ...prev, loyaltyPoints: json.user.rewards ?? (prev.loyaltyPoints || 0) } : prev);
+          }
+        } catch (err) {
+          console.error('Refund failed', err);
+        }
+      })();
+    }
   };
 
   const calculateTotal = () => {
     const subtotal = cart.reduce((sum, item) => {
-      const price = typeof item.price === 'number' ? item.price : parseFloat(item.price.replace('$', ''));
-      return sum + price * item.quantity;
+      // Reward items use points instead of a monetary price
+      if (item?.points) return sum;
+
+      // Safely handle price which may be a number, a string like "$12.99", or undefined
+      const priceValue = typeof item.price === 'number'
+        ? item.price
+        : parseFloat((item.price || '0').toString().replace('$', '')) || 0;
+      const quantity = item.quantity || 1;
+      return sum + priceValue * quantity;
     }, 0);
     const tax = subtotal * 0.13; // 13% tax
     const deliveryFee = cart.length > 0 ? 5.00 : 0; // $5 delivery fee if cart not empty
@@ -62,27 +102,27 @@ export default function App() {
     };
   };
 
-  const handleLoginSuccess = (email) => {
-    // Simulate setting user data after successful login
+  const handleLoginSuccess = (userFromServer) => {
+    if (!userFromServer) return;
     setUser({
-      name: email.split('@')[0], // Extract name from email for demo
-      email: email,
-      joinDate: new Date().toLocaleDateString(),
-      loyaltyPoints: 150,
-      memberSince: new Date().toLocaleDateString(),
-      avatar: null
+      name: userFromServer.name || userFromServer.full_name || '',
+      email: userFromServer.email,
+      joinDate: userFromServer.joinDate || userFromServer.created_at || new Date().toLocaleDateString(),
+      loyaltyPoints: userFromServer.loyaltyPoints ?? userFromServer.rewards ?? 0,
+      memberSince: userFromServer.memberSince || userFromServer.created_at || new Date().toLocaleDateString(),
+      avatar: userFromServer.avatar || null,
     });
   };
 
-  const handleRegisterSuccess = (userData) => {
-    // Set user data after successful registration
+  const handleRegisterSuccess = (userFromServer) => {
+    if (!userFromServer) return;
     setUser({
-      name: userData.name,
-      email: userData.email,
-      joinDate: new Date().toLocaleDateString(),
-      loyaltyPoints: 50, // New users start with some points
-      memberSince: new Date().toLocaleDateString(),
-      avatar: null
+      name: userFromServer.name || userFromServer.full_name || '',
+      email: userFromServer.email,
+      joinDate: userFromServer.joinDate || userFromServer.created_at || new Date().toLocaleDateString(),
+      loyaltyPoints: userFromServer.loyaltyPoints ?? userFromServer.rewards ?? 0,
+      memberSince: userFromServer.memberSince || userFromServer.created_at || new Date().toLocaleDateString(),
+      avatar: userFromServer.avatar || null,
     });
   };
 
@@ -122,6 +162,7 @@ export default function App() {
         return <RewardsScreen
           user={user}
           onAddToCart={addToCart}
+          onUpdateRewards={(newPoints) => setUser(prev => prev ? { ...prev, loyaltyPoints: newPoints } : prev)}
           cart={cart}
         />
     };

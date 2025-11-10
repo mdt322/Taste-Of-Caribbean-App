@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -172,14 +173,27 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Order Summary</Text>
       <View style={styles.cartItems}>
-        {cart.map((item, index) => (
-          <View key={index} style={styles.cartItem}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemPrice}>
-              ${typeof item.price === 'number' ? item.price.toFixed(2) : parseFloat(item.price.replace('$', '')).toFixed(2)}
-            </Text>
-          </View>
-        ))}
+        {cart.map((item, index) => {
+          // Safely derive a monetary price for display. Reward items use points instead of price.
+          let priceValue = 0;
+          if (item?.points) {
+            priceValue = 0;
+          } else if (typeof item.price === 'number') {
+            priceValue = item.price;
+          } else {
+            // item.price may be undefined or a string like "$12.99"
+            priceValue = parseFloat((item.price || '0').toString().replace('$', '')) || 0;
+          }
+
+          return (
+            <View key={index} style={styles.cartItem}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemPrice}>
+                {item?.points ? `${item.points} pts` : `$${priceValue.toFixed(2)}`}
+              </Text>
+            </View>
+          );
+        })}
       </View>
       <View style={styles.totalContainer}>
         <Text style={styles.totalLabel}>Total</Text>
@@ -230,6 +244,32 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
     );
   };
 
+  // Utility: Refund points for a reward item
+  const refundRewardPoints = async (item) => {
+    if (item?.points && user?.email) {
+      try {
+        const response = await fetch('http://localhost:5000/api/rewards/refund', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, points: item.points })
+        });
+        const text = await response.text();
+        let data;
+        try { data = JSON.parse(text); } catch { data = {}; }
+        if (response.ok) {
+          // Optionally update user points in parent state
+          if (data.user && data.user.rewards !== undefined) {
+            user.loyaltyPoints = data.user.rewards;
+          }
+        } else {
+          Alert.alert('Refund failed', data.message || 'Could not refund points');
+        }
+      } catch (err) {
+        Alert.alert('Refund error', 'Network or server error');
+      }
+    }
+  };
+
   return (
     // <SafeAreaView style={styles.container}>
     <>
@@ -240,12 +280,16 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
             Back
           </Text>
         </TouchableOpacity>
+        {/* Cross (X) button at top right */}
+        <TouchableOpacity onPress={onBack} style={styles.crossButtonContainer}>
+          <MaterialIcons name="close" size={28} color="#2e8b57" />
+        </TouchableOpacity>
       </View>
       <ScrollView style={styles.content}>
         {renderStoreLocation()}
         {renderDeliveryOptions()}
         {renderTimeSelection()}
-        {renderCartSummary()}
+  {renderCartSummary()}
         {renderLoyaltyPoints()}
         <TouchableOpacity
           style={[styles.applePayButton, (!selectedTime || isLoading) && styles.applePayButtonDisabled]}
@@ -281,6 +325,13 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
 };
 
 const styles = StyleSheet.create({
+  crossButtonContainer: {
+    position: 'absolute',
+    right: 16,
+    top: 0,
+    padding: 8,
+    zIndex: 10,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',

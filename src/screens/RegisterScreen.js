@@ -42,15 +42,25 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
         }),
       });
 
-      const data = await response.json();
+      // Safely parse response body (avoid throwing on empty/non-JSON)
+      const text = await response.text();
+      let data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          data = null;
+        }
+      }
 
       if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
+        throw new Error((data && data.message) ? data.message : 'Registration failed');
       }
 
       setStatusMessage('Registration successful!');
       if (onRegisterSuccess) {
-        onRegisterSuccess({ name, email }); // Pass user data to parent component
+        // Pass full user object returned by server to parent
+        onRegisterSuccess((data && data.user) ? data.user : { name, email });
       }
 
       // Hide status after 2 seconds and close modal

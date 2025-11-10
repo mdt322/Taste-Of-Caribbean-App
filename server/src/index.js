@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import passwordRoutes from './routes/password.js';
+import rewardsRoutes from './routes/rewards.js';
 
 // Load environment variables
 
@@ -13,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/password', passwordRoutes);
+app.use('/api/rewards', rewardsRoutes);
 
 // Start the server
 

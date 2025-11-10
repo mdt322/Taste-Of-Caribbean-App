@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-const RewardsScreen = ({ user, onAddToCart, cart = [] }) => {
+const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
   const [activeSection, setActiveSection] = useState('food');
 
   // Food rewards
@@ -29,13 +29,66 @@ const RewardsScreen = ({ user, onAddToCart, cart = [] }) => {
   ];
 
   // Handle reward redemption
-  const handleRedeemReward = (reward) => {
-    if (user && user.loyaltyPoints >= reward.points) {
-      onAddToCart({ ...reward, quantity: 1 });
-      Alert.alert('Success', `${reward.name} added to cart!`);
-    } else {
-      const currentPoints = user?.loyaltyPoints || 0;
+  const handleRedeemReward = async (reward) => {
+    const currentPoints = user?.loyaltyPoints || 0;
+
+    if (!user) {
+      Alert.alert('Not signed in', 'Please sign in to redeem rewards.');
+      return;
+    }
+
+    if (currentPoints < reward.points) {
       Alert.alert('Insufficient Points', `You need ${reward.points} points to redeem ${reward.name}. You have ${currentPoints} points.`);
+      return;
+    }
+
+    // Try redeeming via server API. Adjust the base URL as needed for emulator/device.
+    try {
+      const res = await fetch('http://localhost:5001/api/rewards/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, points: reward.points })
+      });
+
+      // Safely read response body: avoid throwing on empty/non-JSON responses
+      const text = await res.text();
+      let json = null;
+      if (text) {
+        try {
+          json = JSON.parse(text);
+        } catch (e) {
+          // ignore parse error and keep json as null
+          json = null;
+        }
+      }
+
+      if (!res.ok) {
+        // Server returned error (e.g., not enough points)
+        const msg = (json && json.message) ? json.message : 'Unable to redeem points';
+        Alert.alert('Redeem failed', msg);
+        return;
+      }
+
+      // Success: update client state and add reward to cart
+      // Prefer server-provided full user row; fall back to rewards field if present
+      const newPoints = (json && json.user && typeof json.user.rewards === 'number')
+        ? json.user.rewards
+        : (json && typeof json.rewards === 'number')
+          ? json.rewards
+          : (currentPoints - reward.points);
+      if (onUpdateRewards) onUpdateRewards(newPoints);
+
+      // Add the redeemed reward to cart (client-side)
+      if (onAddToCart) onAddToCart({ ...reward, quantity: 1 });
+
+      Alert.alert('Item redeemed successfully', `${reward.name} added to cart!`);
+    } catch (err) {
+      console.error('Redeem error', err);
+      // Fallback to client-only behavior if server unavailable
+      if (onAddToCart) onAddToCart({ ...reward, quantity: 1 });
+      // Use friendly success message for offline case
+      Alert.alert('Item redeemed successfully', `${reward.name} added to cart!`);
+      if (onUpdateRewards) onUpdateRewards(currentPoints - reward.points);
     }
   };
 
