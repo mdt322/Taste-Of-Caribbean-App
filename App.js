@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, Modal, Button, View, StatusBar } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Home from './src/components/home/Home';
 import Menu from './src/components/menu/Menu';
+import Merch from './src/components/merch/Merch';
 import CartScreen from './src/screens/CartScreen';
 import Profile from './src/components/profile/Profile';
 import AuthModal from './src/components/authmodal/AuthModal';
@@ -9,7 +11,7 @@ import RewardsScreen from './src/screens/RewardsScreen';
 
 export default function App() {
   const [cart, setCart] = useState([]);
-  const [activeTab, setActiveTab] = useState('Menu');
+  const [activeTab, setActiveTab] = useState('Home');
 
   // authFlag determines whether the pop up for authentication appears
   const [authFlag, setAuthFlag] = useState(false);
@@ -17,6 +19,9 @@ export default function App() {
   // authMode determines what mode that pop up is in when it appears (Sign In/Registration)
   const [authMode, setAuthMode] = useState('Sign In');
   const [user, setUser] = useState(null); // User authentication state
+
+  // cartFlag determines whether the pop up for cart screen appears
+  const [cartFlag, setCartFlag] = useState(false);
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -89,31 +94,23 @@ export default function App() {
   // Renders page in main screen depending on activeTab
   const renderPage = () => {
     switch (activeTab) {
-      case 'Menu':
-        return <Menu addToCart={addToCart} />
-      case 'OrderSummary':
-        return <CartScreen
-          cart={cart}
-          {...calculateTotal()}
-          onIncrease={(id) => updateQuantity(id, 1)}
-          onDecrease={(id) => updateQuantity(id, -1)}
-          onOrderComplete={() => {
-            // Award loyalty points to signed-in users
-            if (user) {
-              const pointsEarned = Math.floor(calculateTotal().total);
-              setUser(prevUser => ({
-                ...prevUser,
-                loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
-              }));
-            }
 
-            setCart([]);
-            setActiveTab('Menu');
-          }}
-          user={user}
-          navigation={{ navigate: (screen) => setActiveTab(screen) }}
-        />
-      case 'Profile':
+      case 'Home':
+        return (
+          <Home
+            user={user}
+            onNavigate={(screen) => setActiveTab(screen)}
+            onSignIn={() => setAuthFlag(true)}
+          />
+        )
+
+      case 'Menu':
+        return <Menu addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
+
+      case 'Merch':
+        return <Merch addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
+
+      case 'More':
         return <Profile
           user={user}
           setAuthFlag={setAuthFlag}
@@ -127,8 +124,6 @@ export default function App() {
           onAddToCart={addToCart}
           cart={cart}
         />
-      // default:
-      //   return <Menu addToCart={addToCart} />
     };
   };
 
@@ -137,8 +132,8 @@ export default function App() {
       {/* App screen content */}
       <SafeAreaView style={styles.appContainer}>
         <StatusBar barStyle="dark-content" />
-        {/* Modal pop up that shows sign in and registration page */}
 
+        {/* Modal pop up that shows sign in and registration page */}
         <Modal
           visible={authFlag}
           animationType="slide"
@@ -152,43 +147,66 @@ export default function App() {
           />
         </Modal>
 
+        {/* Cart Modal */}
+        <Modal
+          visible={cartFlag}
+          animationType="slide"
+          statusBarTranslucent={true}
+        >
+          <View style={styles.cartModalContainer}>
+            <View style={styles.cartModalHeader}>
+              <Text style={styles.cartModalTitle}>Cart</Text>
+              <TouchableOpacity 
+                onPress={() => setCartFlag(false)}
+                style={styles.modalCloseButton}
+                hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+              >
+                <Text style={styles.modalCloseButtonText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <CartScreen
+              cart={cart}
+              {...calculateTotal()}
+              onIncrease={(id) => updateQuantity(id, 1)}
+              onDecrease={(id) => updateQuantity(id, -1)}
+              onOrderComplete={() => {
+                // Award loyalty points to signed-in users
+                if (user) {
+                  const pointsEarned = Math.floor(calculateTotal().total);
+                  setUser(prevUser => ({
+                    ...prevUser,
+                    loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
+                  }));
+                }
 
-        {/* { signinFlag && 
-      <View style={styles.signinContainer}>
-        <SignIn setSigninFlag={setSigninFlag} />
-      </View>
-      } */}
+                setCart([]);
+                setActiveTab('Menu');
+              }}
+              user={user}
+              navigation={{ navigate: (screen) => setActiveTab(screen) }}
+            />
+          </View>
+        </Modal>
 
         <View style={styles.content}>
-
-          {/* Old render page view */}
-          {/* {activeTab === 'Menu' ? (
-          <Menu addToCart={addToCart} />
-        ) : (
-          <CartScreen
-            cart={cart}
-            {...calculateTotal()}
-            onIncrease={(id) => updateQuantity(id, 1)}
-            onDecrease={(id) => updateQuantity(id, -1)}
-            onOrderComplete={() => {
-              setCart([]);
-              setActiveTab('Menu');
-            }}
-          />
-        )} */}
-
-          {/* New way to render pages, needed for more than 2 pages */}
-          {/* <SafeAreaView style={styles.container}> */}
           <View style={styles.topBorder}>
             {renderPage()}
           </View>
-          {/* </SafeAreaView> */}
-          {/* SafeAreaView wraps around whatever element is rendered here, so there's no need to */}
-          {/* include its use in every element */}
-
         </View>
+
         {/* Footer tabs */}
+        {/* Home tab */}
         <View style={styles.tabBar}>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Home' && styles.activeTab]}
+            onPress={() => setActiveTab('Home')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}>
+              Home
+            </Text>
+          </TouchableOpacity>
+
+          {/* Menu tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
             onPress={() => setActiveTab('Menu')}
@@ -197,6 +215,19 @@ export default function App() {
               Menu
             </Text>
           </TouchableOpacity>
+
+          {/* Order tab/Cart is removed and replaced with */}
+          {/* Merch tab */}
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'Merch' && styles.activeTab]}
+            onPress={() => setActiveTab('Merch')}
+          >
+            <Text style={[styles.tabText, activeTab === 'Merch' && styles.activeTabText]}>
+              Merch
+            </Text>
+          </TouchableOpacity>
+
+          {/* Rewards tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Rewards' && styles.activeTab]}
             onPress={() => setActiveTab('Rewards')}
@@ -205,21 +236,15 @@ export default function App() {
               Rewards
             </Text>
           </TouchableOpacity>
+
+          {/* Profile tab renamed to */}
+          {/* More tab */}
           <TouchableOpacity
-            style={[styles.tab, activeTab === 'OrderSummary' && styles.activeTab]}
-            onPress={() => setActiveTab('OrderSummary')}
-          // disabled={cart.length === 0}
+            style={[styles.tab, activeTab === 'More' && styles.activeTab]}
+            onPress={() => setActiveTab('More')}
           >
-            <Text style={[styles.tabText, activeTab === 'OrderSummary' && styles.activeTabText]}>
-              Cart {cart.length > 0 && `(${cart.length})`}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'Profile' && styles.activeTab]}
-            onPress={() => setActiveTab('Profile')}
-          >
-            <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>
-              Profile
+            <Text style={[styles.tabText, activeTab === 'More' && styles.activeTabText]}>
+              More
             </Text>
           </TouchableOpacity>
         </View>
@@ -235,6 +260,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  cartModalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 0,
+    marginTop: 0,
+  },
+  cartModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    marginTop: 30, // Add margin to account for status bar
+  },
+  cartModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginLeft: 10, // Add some left margin for better alignment
+  },
+  modalCloseButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 5, // Add some right margin for better touch target
+  },
+  modalCloseButtonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
   },
   topBorder: {
     flex: 1,

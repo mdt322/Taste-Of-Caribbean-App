@@ -25,7 +25,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react
 // import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useMenu } from '../../hooks/useMenu.js';
 
-const Menu = ({ addToCart }) => {
+const Menu = ({ addToCart, setCartFlag, cart }) => {
   const { menuItems, loading, error } = useMenu();
   const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -77,6 +77,16 @@ const Menu = ({ addToCart }) => {
 
   return (
     <>
+      {/* Floating cart button */}
+      <TouchableOpacity
+        style={styles.floatingCartButton}
+        onPress={() => setCartFlag(true)}
+      >
+        <Text style={styles.floatingCartButtonText}>
+          {'\u{1F6D2}'} {cart.length > 0 && `${cart.length}`}
+        </Text>
+      </TouchableOpacity>
+
       <View style={styles.header}>
         <Text style={styles.title}>Menu</Text>
         <View style={styles.categories}>
@@ -93,6 +103,7 @@ const Menu = ({ addToCart }) => {
           ))}
         </View>
       </View>
+
       <FlatList
         data={filteredItems}
         renderItem={renderItem}
@@ -148,12 +159,14 @@ const styles = StyleSheet.create({
   },
   menuList: {
     padding: 8,
+    paddingBottom: 80,
   },
   card: {
     flex: 1,
     margin: 8,
     backgroundColor: '#fff',
     borderRadius: 12,
+    maxWidth: '45%',
     overflow: 'hidden',
     elevation: 2,
     shadowColor: '#000',
@@ -208,6 +221,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginBottom: 8,
+  },
+  floatingCartButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    height: 70,
+    width: 70,
+    borderRadius: 50,
+    backgroundColor: '#ffb300',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+    elevation: 5,
+  },
+  floatingCartButtonText: {
+    color: '#ffffff',
+    fontSize: 27,
   },
 });
 

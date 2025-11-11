@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import OrderSummary from '../components/checkout/OrderSummary';
 import Checkout from '../components/checkout/Checkout';
 
@@ -32,7 +32,7 @@ const CartScreen = ({
   const [showCheckout, setShowCheckout] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {showCheckout ? (
         <Checkout
           cart={cart}
@@ -60,48 +60,15 @@ const CartScreen = ({
           onDecrease={onDecrease || (() => console.log('Decrease'))}
           onCheckout={() => setShowCheckout(true)}
         />
-      )
-      }
-    </View>
+      )}
+    </SafeAreaView>
   );
-  // if (showCheckout) {
-  //   return (
-  //     <Checkout
-  //       cart={cart}
-  //       subtotal={subtotal}
-  //       tax={tax}
-  //       deliveryFee={deliveryFee}
-  //       total={total}
-  //       onBack={() => setShowCheckout(false)}
-  //       onOrderComplete={() => {
-  //         setShowCheckout(false);
-  //         if (onOrderComplete) {
-  //           onOrderComplete();
-  //         }
-  //       }}
-  //       user={user}
-  //     />
-  //   );
-  // }
-
-  // return (
-  //   <OrderSummary
-  //     items={cart}
-  //     subtotal={subtotal}
-  //     tax={tax}
-  //     deliveryFee={deliveryFee}
-  //     total={total}
-  //     onIncrease={onIncrease || (() => console.log('Increase'))}
-  //     onDecrease={onDecrease || (() => console.log('Decrease'))}
-  //     onCheckout={() => setShowCheckout(true)}
-  //   />
-  // );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-  }
+    backgroundColor: '#fff',
+  },
 });
 export default CartScreen;

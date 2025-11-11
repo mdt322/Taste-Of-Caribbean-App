@@ -333,29 +333,40 @@ const PasswordResetScreen = ({ user, onBack, navigation, colors, theme }) => {
       return;
     }
 
-    // Simulate API call
+    // Send request to server to update password 
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
+      const payload = {
+        email: user?.email,
+        currentPassword: oldPassword,
+        newPassword: newPassword,
+      };
 
-      Alert.alert(
-        'Success',
-        'Your password has been successfully updated!',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Reset form and go back
-              setOldPassword('');
-              setNewPassword('');
-              setConfirmPassword('');
-              onBack();
-            }
+      const response = await fetch('http://localhost:5001/api/password/change', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update password');
+      }
+
+      Alert.alert('Success', 'Your password has been successfully updated!', [
+        {
+          text: 'OK',
+          onPress: () => {
+            setOldPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+            onBack();
           }
-        ]
-      );
+        }
+      ]);
     } catch (error) {
-      Alert.alert('Error', 'Failed to update password. Please try again.');
+      Alert.alert('Error', error.message || 'Failed to update password. Please try again.');
     } finally {
       setIsLoading(false);
     }
