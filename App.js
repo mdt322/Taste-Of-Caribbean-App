@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, Modal, Button, View, StatusBar } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
 import Home from './src/components/home/Home';
 import Menu from './src/components/menu/Menu';
 import Merch from './src/components/merch/Merch';
@@ -22,6 +23,9 @@ export default function App() {
 
   // cartFlag determines whether the pop up for cart screen appears
   const [cartFlag, setCartFlag] = useState(false);
+
+  // Takes backend url from .env if altered
+  const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -60,7 +64,7 @@ export default function App() {
       // fire-and-forget: refund on server and update local user state when done
       (async () => {
         try {
-          const res = await fetch('http://localhost:5001/api/rewards/refund', {
+          const res = await fetch(`${API_BACKEND_URL}:5001/api/rewards/refund`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: String(user.email).trim().toLowerCase(), points: pointsToRefund })

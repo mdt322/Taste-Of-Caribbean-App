@@ -12,6 +12,8 @@ import {
 
 const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
   const [activeSection, setActiveSection] = useState('food');
+
+  // Takes backend url from .env if altered
   const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
 
   // Food rewards
