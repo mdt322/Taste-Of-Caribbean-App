@@ -48,7 +48,7 @@ Taste of Caribbean is a mobile food ordering application built with React Native
    docker-compose up --build
    ```
 
-   **Note:** When testing the app through Expo Go on your mobile device, change 'localhost' to your machine's local IP address in both the /src/screens/RegisterScreen.js and /src/screens/LoginScreen.js files. The values will be marked with a comment marked as IMPORTANT above it.
+   **Note:** When testing the app through Expo Go on your mobile device, alter your .env in the main project directory and uncomment the entry for REACT_APP_BACKEND_URL Insert your backend's ip url where prompted.
 
 ### Project Structure
 
