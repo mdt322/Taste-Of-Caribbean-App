@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Animated } from 'react-native';
+import Constants from 'expo-constants';
 // import { signInWithEmailAndPassword } from 'firebase/auth';
 // import { auth } from '../config/firebase';
 
@@ -9,6 +10,8 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
+
+  const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -21,9 +24,7 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
       setStatusMessage('Logging in...');
       setShowStatus(true);
 
-      // here we fetch credentials from rds mysql database
-      // ***IMPORTANT*** change localhost to your machine's local IP address when testing app on mobile device
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch( `${API_BACKEND_URL}/api/auth/login` , {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
