@@ -31,7 +31,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       setStatusMessage('Creating account...');
       setShowStatus(true);
 
-      const response = await fetch( `${API_BACKEND_URL}/api/auth/login` , {
+  const response = await fetch( `${API_BACKEND_URL}/api/auth/register` , {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
