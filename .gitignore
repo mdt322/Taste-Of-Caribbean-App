@@ -5,10 +5,19 @@
 
 # Environment files
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+server.env
+
+# API Configuration
+src/utils/apiConfig.js
+
+# Database
+*.sql
+!schema.sql
+
+# Local development
+.local-*
 
 # React Native / Expo
 .expo/

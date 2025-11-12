@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import Constants from 'expo-constants';
+import { API_BASE_URL } from '../utils/apiConfig';
+console.log('API Base URL (Register):', API_BASE_URL);
 // import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 // import { auth } from '../config/firebase';
 
@@ -13,7 +14,6 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
 
-  const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -31,7 +31,8 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
       setStatusMessage('Creating account...');
       setShowStatus(true);
 
-      const response = await fetch( `${API_BACKEND_URL}/api/auth/login` , {
+      console.log('Attempting registration with:', { email, name });
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,6 +55,7 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
         }
       }
 
+      console.log('Registration response status:', response.status);
       if (!response.ok) {
         throw new Error((data && data.message) ? data.message : 'Registration failed');
       }

@@ -4,9 +4,16 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'rea
 import OrderHistory from './OrderHistory';
 import SettingsScreen from '../../screens/SettingsScreen';
 
-const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, navigation }) => {
+const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, onNavigate, statusMessage, isAdmin = false }) => {
+    const [activeTab, setActiveTab] = useState('profile');
     const [showOrderHistory, setShowOrderHistory] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const [showRewards, setShowRewards] = useState(false);
+    const [showPrivilegedOptions, setShowPrivilegedOptions] = useState(false);
+    const [showManageMenu, setShowManageMenu] = useState(false);
+
+    // isAdmin is already destructured from props
+
     const setToRegister = () => {
         setAuthFlag(true);
         setAuthMode('Register');
@@ -68,102 +75,144 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
                     {/* Header with user info */}
-                    <View style={styles.header}>
-                        <View style={styles.avatarContainer}>
-                            <View style={styles.avatar}>
-                                <Text style={styles.avatarText}>
-                                    {user.name.charAt(0).toUpperCase()}
+                    <View style={styles.container}>
+                        {statusMessage && (
+                            <View style={[
+                                styles.statusIndicator,
+                                statusMessage.includes('successful') && styles.statusSuccess,
+                                { margin: 16, marginBottom: 0 }
+                            ]}>
+                                <Text style={styles.statusText}>{statusMessage}</Text>
+                            </View>
+                        )}
+                        <View style={styles.header}>
+                            <View style={styles.avatarContainer}>
+                                <View style={styles.avatar}>
+                                    <Text style={styles.avatarText}>
+                                        {user.name.charAt(0).toUpperCase()}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.userInfo}>
+                                <Text style={styles.userName}>{user.name}</Text>
+                                <Text style={styles.userEmail}>{user.email}</Text>
+                                <Text style={styles.memberSince}>
+                                    Member since {user.memberSince}
                                 </Text>
                             </View>
                         </View>
-                        <View style={styles.userInfo}>
-                            <Text style={styles.userName}>{user.name}</Text>
-                            <Text style={styles.userEmail}>{user.email}</Text>
-                            <Text style={styles.memberSince}>
-                                Member since {user.memberSince}
+
+                        {/* Loyalty Points Card */}
+                        <View style={styles.pointsCard}>
+                            <View style={styles.pointsHeader}>
+                                <Text style={styles.pointsTitle}>Loyalty Points</Text>
+                                <Text style={styles.pointsValue}>{user.loyaltyPoints}</Text>
+                            </View>
+                            <Text style={styles.pointsDescription}>
+                                Earn points with every order! 1 point per $1 spent.
+                            </Text>
+                            <View style={styles.pointsProgress}>
+                                <View
+                                    style={[
+                                        styles.pointsProgressBar,
+                                        { width: `${Math.min((user.loyaltyPoints / 500) * 100, 100)}%` }
+                                    ]}
+                                />
+                            </View>
+                            <Text style={styles.pointsNextReward}>
+                                {500 - user.loyaltyPoints} points until your next free meal!
                             </Text>
                         </View>
-                    </View>
 
-                    {/* Loyalty Points Card */}
-                    <View style={styles.pointsCard}>
-                        <View style={styles.pointsHeader}>
-                            <Text style={styles.pointsTitle}>Loyalty Points</Text>
-                            <Text style={styles.pointsValue}>{user.loyaltyPoints}</Text>
-                        </View>
-                        <Text style={styles.pointsDescription}>
-                            Earn points with every order! 1 point per $1 spent.
-                        </Text>
-                        <View style={styles.pointsProgress}>
-                            <View
-                                style={[
-                                    styles.pointsProgressBar,
-                                    { width: `${Math.min((user.loyaltyPoints / 500) * 100, 100)}%` }
-                                ]}
-                            />
-                        </View>
-                        <Text style={styles.pointsNextReward}>
-                            {500 - user.loyaltyPoints} points until your next free meal!
-                        </Text>
-                    </View>
-
-                    {/* Account Information */}
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Account Information</Text>
-                        <View style={styles.infoCard}>
-                            <View style={styles.infoRow}>
-                                <Text style={styles.infoLabel}>Email</Text>
-                                <Text style={styles.infoValue}>{user.email}</Text>
-                            </View>
-                            <View style={styles.infoRow}>
-                                <Text style={styles.infoLabel}>Member Since</Text>
-                                <Text style={styles.infoValue}>{user.memberSince}</Text>
-                            </View>
-                            <View style={styles.infoRow}>
-                                <Text style={styles.infoLabel}>Account Status</Text>
-                                <Text style={[styles.infoValue, styles.statusActive]}>Active</Text>
+                        {/* Account Information */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>Account Information</Text>
+                            <View style={styles.infoCard}>
+                                <View style={styles.infoRow}>
+                                    <Text style={styles.infoLabel}>Email</Text>
+                                    <Text style={styles.infoValue}>{user.email}</Text>
+                                </View>
+                                <View style={styles.infoRow}>
+                                    <Text style={styles.infoLabel}>Member Since</Text>
+                                    <Text style={styles.infoValue}>{user.memberSince}</Text>
+                                </View>
+                                <View style={styles.infoRow}>
+                                    <Text style={styles.infoLabel}>Account Status</Text>
+                                    <Text style={[styles.infoValue, styles.statusActive]}>Active</Text>
+                                </View>
                             </View>
                         </View>
-                    </View>
 
-                    {/* Quick Actions */}
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Quick Actions</Text>
-                        <View style={styles.actionsGrid}>
-                            <TouchableOpacity
-                                style={styles.actionCard}
-                                onPress={() => setShowOrderHistory(true)}
-                            >
-                                <Text style={styles.actionIcon}>📋</Text>
-                                <Text style={styles.actionText}>Order History</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.actionCard}
-                                onPress={() => navigation?.navigate('Rewards')}
-                            >
-                                <Text style={styles.actionIcon}>🎁</Text>
-                                <Text style={styles.actionText}>Rewards</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.actionCard}>
-                                <Text style={styles.actionIcon}>❤️</Text>
-                                <Text style={styles.actionText}>Favorites</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.actionCard} onPress={() => setShowSettings(true)}>
-                                <Text style={styles.actionIcon}>⚙️</Text>
-                                <Text style={styles.actionText}>Settings</Text>
-                            </TouchableOpacity>
+                        {/* Status Indicator - Moved from bottom to here */}
+                        {statusMessage && (
+                            <View style={[
+                                styles.statusIndicator,
+                                statusMessage.includes('successful') && styles.statusSuccess
+                            ]}>
+                                <Text style={styles.statusText}>{statusMessage}</Text>
+                            </View>
+                        )}
+
+                        {/* Admin Controls */}
+                        {user?.isAdmin && (
+                            <View style={styles.section}>
+                                <Text style={styles.sectionTitle}>Admin Controls</Text>
+                                <View style={styles.adminButtonsContainer}>
+                                    <TouchableOpacity 
+                                        style={[styles.adminButton, styles.viewUsersButton]}
+                                        onPress={() => onNavigate('Admin')}
+                                    >
+                                        <Text style={styles.adminButtonText}>View All Users</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity 
+                                        style={[styles.adminButton, styles.manageMenuButton]}
+                                        onPress={() => onNavigate('Admin')} // TODO: Change to 'ManageMenu' when that screen is created
+                                    >
+                                        <Text style={styles.adminButtonText}>Manage Menu</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        )}
+
+                        {/* Quick Actions */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>Quick Actions</Text>
+                            <View style={styles.actionsGrid}>
+                                <TouchableOpacity
+                                    style={styles.actionCard}
+                                    onPress={() => setShowOrderHistory(true)}
+                                >
+                                    <Text style={styles.actionIcon}>📋</Text>
+                                    <Text style={styles.actionText}>Order History</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.actionCard}
+                                    onPress={() => navigation?.navigate('Rewards')}
+                                >
+                                    <Text style={styles.actionIcon}>🎁</Text>
+                                    <Text style={styles.actionText}>Rewards</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.actionCard}>
+                                    <Text style={styles.actionIcon}>❤️</Text>
+                                    <Text style={styles.actionText}>Favorites</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.actionCard} onPress={() => setShowSettings(true)}>
+                                    <Text style={styles.actionIcon}>⚙️</Text>
+                                    <Text style={styles.actionText}>Settings</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
+
+                        {/* Logout Button */}
+                        <TouchableOpacity
+                            style={styles.logoutButton}
+                            onPress={handleLogout}
+                        >
+                            <Text style={styles.logoutButtonText}>Logout</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.bottomSpacing} />
                     </View>
-
-                    {/* Logout Button */}
-                    <TouchableOpacity
-                        style={styles.logoutButton}
-                        onPress={handleLogout}
-                    >
-                        <Text style={styles.logoutButtonText}>Logout</Text>
-                    </TouchableOpacity>
-
-                    <View style={styles.bottomSpacing} />
                 </ScrollView>
             </>
         );
@@ -233,6 +282,55 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
 };
 
 const styles = StyleSheet.create({
+    // Admin Controls
+    adminButtonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    adminButton: {
+        flex: 1,
+        height: 80,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 5,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    viewUsersButton: {
+        backgroundColor: '#4a90e2',
+    },
+    manageMenuButton: {
+        backgroundColor: '#50c878',
+    },
+    adminButtonText: {
+        color: '#fff',
+        fontWeight: '500',
+        fontSize: 14,
+        textAlign: 'center',
+        marginTop: 5,
+    },
+    statusIndicator: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        padding: 12,
+        borderRadius: 8,
+        marginHorizontal: 16,
+        marginBottom: 16,
+        alignItems: 'center',
+    },
+    statusSuccess: {
+        backgroundColor: 'rgba(40, 167, 69, 0.9)',
+    },
+    statusText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '500',
+    },
     // Common styles
     container: {
         flex: 1,

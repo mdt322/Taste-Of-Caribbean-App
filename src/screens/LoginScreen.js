@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Animated } from 'react-native';
-import Constants from 'expo-constants';
+import { API_BASE_URL } from '../utils/apiConfig';
 // import { signInWithEmailAndPassword } from 'firebase/auth';
 // import { auth } from '../config/firebase';
 
@@ -11,7 +11,7 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
 
-  const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+  console.log('API Base URL:', API_BASE_URL);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -24,7 +24,10 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
       setStatusMessage('Logging in...');
       setShowStatus(true);
 
-      const response = await fetch( `${API_BACKEND_URL}/api/auth/login` , {
+      console.log('=== LOGIN ATTEMPT ===');
+      console.log('Email:', email);
+      console.log('API URL:', `${API_BASE_URL}/api/auth/login`);
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,6 +46,10 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
         }
       }
 
+      console.log('=== LOGIN RESPONSE ===');
+      console.log('Status:', response.status);
+      console.log('Response data:', data);
+      
       if (!response.ok) {
         throw new Error((data && data.message) ? data.message : 'Login failed');
       }

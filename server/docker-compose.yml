@@ -1,18 +1,42 @@
-version: '1.0'
+version: '3.8'
 
 services:
+  db:
+    image: mysql:8.0
+    container_name: taste_db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: taste_of_caribbean
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend_network
+
   backend_server:
-    image: backend_server       # Use the image you already built
+    image: backend_server
     container_name: backend_server
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        NODE_ENV: development   # Or production when needed
+        NODE_ENV: development
     env_file:
-      - .env                    # Environment variables file
+      - .env
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=rootpassword
+      - DB_NAME=taste_of_caribbean
     ports:
-      - "5001:5000"             # Map host port 5000 to container port 5000
+      - "5000:5000"
+    depends_on:
+      - db
     restart: unless-stopped
     networks:
       - backend_network
@@ -20,3 +44,6 @@ services:
 networks:
   backend_network:
     driver: bridge
+
+volumes:
+  db_data:

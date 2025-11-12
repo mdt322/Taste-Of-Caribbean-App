@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, Modal, Button, View, StatusBar } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  TouchableOpacity, 
+  Modal, 
+  View, 
+  StatusBar, 
+  Platform 
+} from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
+
+// Import components
 import Home from './src/components/home/Home';
 import Menu from './src/components/menu/Menu';
 import Merch from './src/components/merch/Merch';
@@ -9,22 +19,17 @@ import CartScreen from './src/screens/CartScreen';
 import Profile from './src/components/profile/Profile';
 import AuthModal from './src/components/authmodal/AuthModal';
 import RewardsScreen from './src/screens/RewardsScreen';
+import PrivilegedOptions from './src/screens/PrivilegedOptions';
 
-export default function App() {
+const App = () => {
+  // State management
   const [cart, setCart] = useState([]);
   const [activeTab, setActiveTab] = useState('Home');
-
-  // authFlag determines whether the pop up for authentication appears
   const [authFlag, setAuthFlag] = useState(false);
-
-  // authMode determines what mode that pop up is in when it appears (Sign In/Registration)
   const [authMode, setAuthMode] = useState('Sign In');
-  const [user, setUser] = useState(null); // User authentication state
-
-  // cartFlag determines whether the pop up for cart screen appears
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [cartFlag, setCartFlag] = useState(false);
-
-  // Takes backend url from .env if altered
   const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
 
   const addToCart = (item) => {
@@ -106,16 +111,32 @@ export default function App() {
     };
   };
 
-  const handleLoginSuccess = (userFromServer) => {
-    if (!userFromServer) return;
-    setUser({
-      name: userFromServer.name || userFromServer.full_name || '',
-      email: userFromServer.email,
-      joinDate: userFromServer.joinDate || userFromServer.created_at || new Date().toLocaleDateString(),
-      loyaltyPoints: userFromServer.loyaltyPoints ?? userFromServer.rewards ?? 0,
-      memberSince: userFromServer.memberSince || userFromServer.created_at || new Date().toLocaleDateString(),
-      avatar: userFromServer.avatar || null,
-    });
+  const handleLoginSuccess = (userData) => {
+    // Handle case where userData is the email string (for backward compatibility)
+    const email = typeof userData === 'string' ? userData : (userData?.email || '');
+    const name = typeof userData === 'string' 
+      ? email.split('@')[0] 
+      : userData?.name || userData?.full_name || email.split('@')[0];
+      
+    const isAdminUser = email.toLowerCase() === 'kg539@njit.edu'; // Case-insensitive admin check for kg539@njit.edu
+    
+    console.log('Login successful:', { email, isAdmin: isAdminUser, userData });
+    
+    setIsAdmin(isAdminUser);
+    
+    // Use data from the server if available, otherwise use defaults
+    const userObj = {
+      name: name,
+      email: email,
+      joinDate: userData?.joinDate || new Date().toLocaleDateString(),
+      loyaltyPoints: userData?.loyaltyPoints || userData?.rewards || 150,
+      memberSince: userData?.memberSince || userData?.created_at || new Date().toLocaleDateString(),
+      avatar: userData?.avatar || null,
+      isAdmin: isAdminUser
+    };
+    
+    setUser(userObj);
+    console.log('User state after login:', userObj);
   };
 
   const handleRegisterSuccess = (userFromServer) => {
@@ -133,6 +154,12 @@ export default function App() {
   const handleLogout = () => {
     setUser(null);
     setAuthFlag(false);
+  };
+
+  // Check if user is admin (in a real app, this would come from your auth system)
+  const checkAdminStatus = (userEmail) => {
+    // This is just an example - in a real app, this would check against your user database
+    return userEmail === 'admin@example.com';
   };
 
   // Renders page in main screen depending on activeTab
@@ -155,30 +182,50 @@ export default function App() {
         return <Merch addToCart={addToCart} setCartFlag={setCartFlag} cart={cart} />
 
       case 'More':
-        return <Profile
-          user={user}
-          setAuthFlag={setAuthFlag}
-          setAuthMode={setAuthMode}
-          onLogout={handleLogout}
-          navigation={{ navigate: (screen) => setActiveTab(screen) }}
-        />
+        return (
+          <Profile
+            user={user}
+            setAuthFlag={setAuthFlag}
+            setAuthMode={setAuthMode}
+            onLogout={handleLogout}
+            cart={cart}
+            onAddToCart={addToCart}
+            onNavigate={(screen) => {
+              console.log('Navigating to:', screen);
+              setActiveTab(screen);
+            }}
+            isAdmin={isAdmin}
+          />
+        );
       case 'Rewards':
-        return <RewardsScreen
+        return (
+          <RewardsScreen
+            user={user}
+            onAddToCart={addToCart}
+            cart={cart}
+          />
+        );
+      case 'Admin':
+        return <PrivilegedOptions onNavigate={(screen) => setActiveTab(screen)} />;
+      default:
+        return <Home
           user={user}
-          onAddToCart={addToCart}
-          onUpdateRewards={(newPoints) => setUser(prev => prev ? { ...prev, loyaltyPoints: newPoints } : prev)}
-          cart={cart}
-        />
-    };
+          onNavigate={(screen) => setActiveTab(screen)}
+          onSignIn={() => setAuthFlag(true)}
+        />;
+    }
   };
 
   return (
     <SafeAreaProvider style={styles.container}>
-      {/* App screen content */}
       <SafeAreaView style={styles.appContainer}>
+        {isAdmin && (
+          <View style={styles.adminBanner}>
+            <Text style={styles.adminText}>ADMIN MODE</Text>
+          </View>
+        )}
         <StatusBar barStyle="dark-content" />
 
-        {/* Modal pop up that shows sign in and registration page */}
         <Modal
           visible={authFlag}
           animationType="slide"
@@ -192,7 +239,6 @@ export default function App() {
           />
         </Modal>
 
-        {/* Cart Modal */}
         <Modal
           visible={cartFlag}
           animationType="slide"
@@ -201,21 +247,23 @@ export default function App() {
           <View style={styles.cartModalContainer}>
             <View style={styles.cartModalHeader}>
               <Text style={styles.cartModalTitle}>Cart</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => setCartFlag(false)}
                 style={styles.modalCloseButton}
-                hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
               >
                 <Text style={styles.modalCloseButtonText}>✕</Text>
               </TouchableOpacity>
             </View>
             <CartScreen
               cart={cart}
-              {...calculateTotal()}
+              subtotal={calculateTotal().subtotal}
+              tax={calculateTotal().tax}
+              deliveryFee={calculateTotal().deliveryFee}
+              total={calculateTotal().total}
               onIncrease={(id) => updateQuantity(id, 1)}
               onDecrease={(id) => updateQuantity(id, -1)}
               onOrderComplete={() => {
-                // Award loyalty points to signed-in users
                 if (user) {
                   const pointsEarned = Math.floor(calculateTotal().total);
                   setUser(prevUser => ({
@@ -223,9 +271,9 @@ export default function App() {
                     loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
                   }));
                 }
-
                 setCart([]);
                 setActiveTab('Menu');
+                setCartFlag(false);
               }}
               user={user}
               navigation={{ navigate: (screen) => setActiveTab(screen) }}
@@ -239,8 +287,6 @@ export default function App() {
           </View>
         </View>
 
-        {/* Footer tabs */}
-        {/* Home tab */}
         <View style={styles.tabBar}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Home' && styles.activeTab]}
@@ -251,7 +297,6 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          {/* Menu tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Menu' && styles.activeTab]}
             onPress={() => setActiveTab('Menu')}
@@ -261,8 +306,6 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          {/* Order tab/Cart is removed and replaced with */}
-          {/* Merch tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Merch' && styles.activeTab]}
             onPress={() => setActiveTab('Merch')}
@@ -272,7 +315,6 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          {/* Rewards tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Rewards' && styles.activeTab]}
             onPress={() => setActiveTab('Rewards')}
@@ -282,25 +324,33 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          {/* Profile tab renamed to */}
-          {/* More tab */}
           <TouchableOpacity
             style={[styles.tab, activeTab === 'More' && styles.activeTab]}
             onPress={() => setActiveTab('More')}
           >
             <Text style={[styles.tabText, activeTab === 'More' && styles.activeTabText]}>
-              More
+              {user ? 'Profile' : 'Login'}
             </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </SafeAreaProvider >
+    </SafeAreaProvider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
+    position: 'relative',
+  },
+  adminBanner: {
+    backgroundColor: '#ff4444',
+    padding: 5,
+    alignItems: 'center',
+  },
+  adminText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   container: {
     flex: 1,
@@ -352,9 +402,10 @@ const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
     borderTopWidth: 1,
-    height: 65,
+    height: Platform.OS === 'ios' ? 85 : 65, // Taller tab bar on iOS for home indicator
     borderTopColor: '#eee',
     backgroundColor: '#fff',
+    paddingBottom: Platform.OS === 'ios' ? 25 : 0, // Add padding for iPhone home indicator
   },
   tab: {
     flex: 1,
@@ -367,12 +418,15 @@ const styles = StyleSheet.create({
     borderTopColor: '#ffb300',
   },
   tabText: {
-    fontSize: 14, // Reduced from 20 to fit 4 tabs
+    fontSize: 12, // Reduced to fit more tabs
     color: '#666',
     textAlign: 'center',
+    marginTop: 4,
   },
   activeTabText: {
     color: '#ffb300',
-    fontWeight: '500',
-  },
+    fontWeight: '500'
+  }
 });
+
+export default App;

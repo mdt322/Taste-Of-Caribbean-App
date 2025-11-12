@@ -8,10 +8,11 @@ import MenuScreen from '../screens/MenuScreen';
 import RewardsShop from '../components/rewards/Rewards';
 import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import PrivilegedOptions from '../screens/PrivilegedOptions';
 
 const Tab = createBottomTabNavigator();
 
-export default function AppNavigator({ user, cart, onAddToCart, onLogout }) {
+export default function AppNavigator({ user, cart, onAddToCart, onLogout, isAdmin = false }) {
   console.log('AppNavigator: Received user:', user);
   console.log('AppNavigator: Received cart:', cart);
 
@@ -80,10 +81,21 @@ export default function AppNavigator({ user, cart, onAddToCart, onLogout }) {
             tabBarBadge: cart.length > 0 ? cart.length : undefined,
           }}
         />
+        {isAdmin && (
+          <Tab.Screen
+            name="Admin"
+            component={PrivilegedOptions}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="shield" size={size} color={color} />
+              ),
+            }}
+          />
+        )}
         <Tab.Screen
           name="Profile"
           component={ProfileScreen}
-          initialParams={{ user, onLogout }}
+          initialParams={{ user, onLogout, isAdmin }}
         />
       </Tab.Navigator>
     </NavigationContainer>
