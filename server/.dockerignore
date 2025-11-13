@@ -1,4 +1,5 @@
 node_modules
-npm-debug.log
-.dockerignore
-.env
+npm - debug.log
+    .dockerignore
+    .env
+docker - compose.yml
