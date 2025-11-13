@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Constants from 'expo-constants';
+import { API_BASE_URL } from '../utils/apiConfig';
+console.log('API BASE URL retrieved by RewardsScreen: ', API_BASE_URL);
 // import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import {
   View,
@@ -12,9 +13,6 @@ import {
 
 const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
   const [activeSection, setActiveSection] = useState('food');
-
-  // Takes backend url from .env if altered
-  const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
 
   // Food rewards
   const foodRewards = [
@@ -48,7 +46,7 @@ const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
 
     // Try redeeming via server API. Adjust the base URL as needed for emulator/device.
     try {
-      const res = await fetch(`${API_BACKEND_URL}/api/rewards/redeem`, {
+      const res = await fetch(`${API_BASE_URL}/api/rewards/redeem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email, points: reward.points })

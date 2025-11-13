@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Animated } from 'react-native';
 import { API_BASE_URL } from '../utils/apiConfig';
+console.log('API Base URL retrieved by LoginScreen:', API_BASE_URL);
 // import { signInWithEmailAndPassword } from 'firebase/auth';
 // import { auth } from '../config/firebase';
 
@@ -10,8 +11,6 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
-
-  console.log('API Base URL:', API_BASE_URL);
 
   const handleLogin = async () => {
     if (!email || !password) {

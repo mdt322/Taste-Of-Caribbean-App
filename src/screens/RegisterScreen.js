@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_BASE_URL } from '../utils/apiConfig';
-console.log('API Base URL (Register):', API_BASE_URL);
+console.log('API Base URL retrieved by RegisterScreen:', API_BASE_URL);
 // import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 // import { auth } from '../config/firebase';
 
@@ -13,7 +13,6 @@ const RegisterScreen = ({ setAuthMode, setAuthFlag, onRegisterSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [showStatus, setShowStatus] = useState(false);
-
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
