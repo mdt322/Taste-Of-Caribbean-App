@@ -10,7 +10,7 @@
 server.env
 
 # API Configuration
-src/utils/apiConfig.js
+# src/utils/apiConfig.js
 
 # Database
 *.sql

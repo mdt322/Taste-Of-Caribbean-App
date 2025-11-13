@@ -49,7 +49,7 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
       console.log('=== LOGIN RESPONSE ===');
       console.log('Status:', response.status);
       console.log('Response data:', data);
-      
+
       if (!response.ok) {
         throw new Error((data && data.message) ? data.message : 'Login failed');
       }
