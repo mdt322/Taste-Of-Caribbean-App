@@ -156,6 +156,20 @@ const App = () => {
     setAuthFlag(false);
   };
 
+  // onOrderComplete contents moved here for easier access
+  // Account order history and point amount updates should be done here
+  const handleOrderCompletion = () => {
+    if (user) {
+      const pointsEarned = Math.floor(calculateTotal().total);
+      setUser(prevUser => ({
+        ...prevUser,
+        loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
+      }));
+    }
+    setCart([]);
+    setCartFlag(false);
+  };
+
   // Check if user is admin (in a real app, this would come from your auth system)
   const checkAdminStatus = (userEmail) => {
     // This is just an example - in a real app, this would check against your user database
@@ -263,18 +277,7 @@ const App = () => {
               total={calculateTotal().total}
               onIncrease={(id) => updateQuantity(id, 1)}
               onDecrease={(id) => updateQuantity(id, -1)}
-              onOrderComplete={() => {
-                if (user) {
-                  const pointsEarned = Math.floor(calculateTotal().total);
-                  setUser(prevUser => ({
-                    ...prevUser,
-                    loyaltyPoints: (prevUser.loyaltyPoints || 0) + pointsEarned
-                  }));
-                }
-                setCart([]);
-                setActiveTab('Menu');
-                setCartFlag(false);
-              }}
+              onOrderComplete={handleOrderCompletion}
               user={user}
               navigation={{ navigate: (screen) => setActiveTab(screen) }}
             />

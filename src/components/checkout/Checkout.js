@@ -63,6 +63,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
         storeLocation: STORE_LOCATION
       };
 
+      // Comment out for now, have to confirm an entry for order history in account database
       // await saveOrder(order);
 
       // Simulate payment processing
