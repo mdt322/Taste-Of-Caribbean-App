@@ -34,11 +34,9 @@ const App = () => {
 
   const addToCart = (item) => {
     setCart((prevCart) => {
-      const existing = prevCart.find((i) => i.id === item.id);
+      let existing = prevCart.find((i) => i.id === item.id);
       if (existing) {
-        return prevCart.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
+        return prevCart.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
       }
       return [...prevCart, { ...item, quantity: 1 }];
     });

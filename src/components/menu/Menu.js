@@ -29,6 +29,9 @@ const Menu = ({ addToCart, setCartFlag, cart }) => {
   const { menuItems, loading, error } = useMenu();
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  // Calculates total quantity of items in the cart to show in the button
+  let totalQuantity = cart.reduce((prevQuantity, currentItem) => prevQuantity + currentItem.quantity, 0);
+
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -83,7 +86,7 @@ const Menu = ({ addToCart, setCartFlag, cart }) => {
         onPress={() => setCartFlag(true)}
       >
         <Text style={styles.floatingCartButtonText}>
-          {'\u{1F6D2}'} {cart.length > 0 && `${cart.length}`}
+          {'\u{1F6D2}'} {totalQuantity > 0 && `${totalQuantity}`}
         </Text>
       </TouchableOpacity>
 
