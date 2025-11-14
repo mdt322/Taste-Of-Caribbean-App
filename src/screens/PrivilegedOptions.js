@@ -292,28 +292,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
     backgroundColor: '#fff',
   },
-  // customerId: {
-  //   flex: 0,
-  //   fontWeight: '500',
-  // },
-  // customerInfo: {
-  //   flex: 1,
-  //   flexDirection: 'row',
-  //   alignItems: 'left',
-  // },
-  // customerName: {
-  //   textAlign: 'left',
-  //   fontWeight: '500',
-  // },
-  // customerEmail: {
-  //   textAlign: 'left',
-  //   paddingLeft: 4,
-  // },
-  // customerPoints: {
-  //   flex: 0,
-  //   textAlign: 'right',
-  //   fontWeight: '500',
-  // },
   detailContainer: {
     flex: 1,
     backgroundColor: '#fff',
