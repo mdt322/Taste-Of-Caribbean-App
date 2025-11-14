@@ -6,6 +6,7 @@ console.log('API Base URL retrieved by LoginScreen:', API_BASE_URL);
 // import { auth } from '../config/firebase';
 
 const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
+  //IMPORTANT CHANGE BACK TO BLANK WHEN NOT TESTING:
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);

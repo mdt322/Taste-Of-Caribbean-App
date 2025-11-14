@@ -4,10 +4,23 @@ import { buildApiUrl } from '../utils/apiConfig';
 
 const CustomerItem = ({ customer, onPress }) => (
   <TouchableOpacity style={styles.customerItem} onPress={() => onPress(customer)}>
-    <Text style={styles.customerId}>{customer.id || 'N/A'}</Text>
-    <Text style={styles.customerName}>{customer.full_name || 'N/A'}</Text>
-    <Text style={styles.customerEmail}>{customer.email || 'N/A'}</Text>
-    <Text style={styles.customerPoints}>{customer.rewards || '0'} pts</Text>
+
+    {/* Customer ID */}
+    <View style={[styles.customerCell, { flex: 0 }]}>
+      <Text style={{ fontWeight: '500' }}>{customer.id || 'N/A'}</Text>
+    </View>
+
+    {/* Customer Name and Email */}
+    <View style={[styles.customerCell, { flex: 1, flexDirection: 'row' }]}>
+      <Text numberOfLines={1} ellipsizeMode="tail">
+        <Text style={{ fontWeight: '500' }}>{customer.full_name || 'N/A'}</Text> | {customer.email || 'N/A'}
+      </Text>
+    </View>
+
+    {/* Customer Points */}
+    <View style={[styles.customerCell, { flex: 0 }]}>
+      <Text style={{ fontWeight: '500' }}>{customer.rewards || '0'} pts</Text>
+    </View>
   </TouchableOpacity>
 );
 
@@ -19,7 +32,7 @@ const CustomerDetail = ({ customer, onBack }) => {
       <TouchableOpacity style={styles.backButton} onPress={onBack}>
         <Text style={styles.backButtonText}>← Back to List</Text>
       </TouchableOpacity>
-      
+
       <View style={styles.detailCard}>
         <Text style={styles.detailTitle}>Customer Details</Text>
         <View style={styles.detailRow}>
@@ -70,38 +83,45 @@ const CustomerList = ({ customers = [], onSelectCustomer, sortBy = 'id', onSortC
   return (
     <View style={styles.listContainer}>
       <View style={styles.headerRow}>
-        <TouchableOpacity 
-          style={styles.headerCell} 
+
+        {/* ID */}
+        <TouchableOpacity
+          style={[styles.headerCell, { flex: 0 }]}
           onPress={() => onSortChange('id')}
         >
           <Text style={styles.headerText}>
             ID {sortBy === 'id' ? '▼' : ''}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.headerCell, { flex: 2 }]}
+
+        {/* Name */}
+        <TouchableOpacity
+          style={[styles.headerCell, { flex: 1 }]}
           onPress={() => onSortChange('name')}
         >
           <Text style={styles.headerText}>
-            Name {sortBy === 'name' ? '▼' : ''}
+            Name | Email {sortBy === 'name' ? '▼' : ''}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.headerCell, { flex: 2 }]}
+
+        {/* Points */}
+        <TouchableOpacity
+          style={[styles.headerCell, { flex: 0 }]}
           onPress={() => onSortChange('rewards')}
         >
-          <Text style={styles.headerText}>
+          <Text style={[styles.headerText, { alignItems: 'right' }]}>
             Points {sortBy === 'rewards' ? '▼' : ''}
           </Text>
         </TouchableOpacity>
       </View>
+
       <FlatList
         data={sortedCustomers}
         keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
         renderItem={({ item }) => (
-          <CustomerItem 
-            customer={item} 
-            onPress={onSelectCustomer} 
+          <CustomerItem
+            customer={item}
+            onPress={onSelectCustomer}
           />
         )}
       />
@@ -125,7 +145,7 @@ const PrivilegedOptions = ({ onNavigate }) => {
       setLoading(true);
       const url = buildApiUrl('/api/admin/customers');
       console.log('Fetching customers from:', url);
-      
+
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -133,23 +153,27 @@ const PrivilegedOptions = ({ onNavigate }) => {
           // Add any required authentication headers here
         },
       });
-      
+
       console.log('Response status:', response.status);
-      
+
       const responseText = await response.text();
       let data;
-      
+
       try {
         data = JSON.parse(responseText);
-        console.log('Response data:', data);
+        // commented out to not clutter terminal
+        // console.log('Response data:', data);
       } catch (jsonError) {
         // If parsing as JSON fails, log the raw response
         console.error('Failed to parse response as JSON:', responseText);
         throw new Error(`Server returned non-JSON response: ${responseText.substring(0, 100)}...`);
       }
-      
+
       if (response.ok) {
-        console.log('Successfully fetched customers:', data);
+        console.log('Successfully fetched customers:'
+          // commented out to not clutter terminal
+          //, data
+        );
         // Ensure data is an array before setting it
         if (Array.isArray(data)) {
           setCustomers(data);
@@ -185,7 +209,7 @@ const PrivilegedOptions = ({ onNavigate }) => {
       return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
     }
     if (sortBy === 'loyalty_points') {
-      return sortOrder === 'asc' 
+      return sortOrder === 'asc'
         ? (a[sortBy] || 0) - (b[sortBy] || 0)
         : (b[sortBy] || 0) - (a[sortBy] || 0);
     }
@@ -205,14 +229,14 @@ const PrivilegedOptions = ({ onNavigate }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Customer Overview</Text>
-      
+
       {selectedCustomer ? (
-        <CustomerDetail 
-          customer={selectedCustomer} 
-          onBack={() => setSelectedCustomer(null)} 
+        <CustomerDetail
+          customer={selectedCustomer}
+          onBack={() => setSelectedCustomer(null)}
         />
       ) : (
-        <CustomerList 
+        <CustomerList
           customers={sortedCustomers}
           onSelectCustomer={setSelectedCustomer}
           sortBy={sortBy}
@@ -251,32 +275,45 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
   },
   headerCell: {
-    flex: 1,
-    alignItems: 'center',
+    paddingHorizontal: 10,
+    minWidth: 50,
   },
   headerText: {
     fontWeight: 'bold',
   },
+  customerCell: {
+    paddingHorizontal: 10,
+    minWidth: 50,
+  },
   customerItem: {
     flexDirection: 'row',
-    padding: 15,
     borderBottomWidth: 1,
+    paddingVertical: 10,
     borderBottomColor: '#eee',
     backgroundColor: '#fff',
   },
-  customerId: {
-    flex: 1,
-    fontWeight: '500',
-  },
-  customerInfo: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  customerPoints: {
-    flex: 1,
-    textAlign: 'right',
-    fontWeight: 'bold',
-  },
+  // customerId: {
+  //   flex: 0,
+  //   fontWeight: '500',
+  // },
+  // customerInfo: {
+  //   flex: 1,
+  //   flexDirection: 'row',
+  //   alignItems: 'left',
+  // },
+  // customerName: {
+  //   textAlign: 'left',
+  //   fontWeight: '500',
+  // },
+  // customerEmail: {
+  //   textAlign: 'left',
+  //   paddingLeft: 4,
+  // },
+  // customerPoints: {
+  //   flex: 0,
+  //   textAlign: 'right',
+  //   fontWeight: '500',
+  // },
   detailContainer: {
     flex: 1,
     backgroundColor: '#fff',
