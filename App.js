@@ -57,6 +57,7 @@ const App = () => {
             ? { ...item, quantity: Math.max(0, item.quantity + change) }
             : item
         )
+        // Removes items with quantity value of 0
         .filter((item) => item.quantity > 0)
     );
 
@@ -275,6 +276,7 @@ const App = () => {
               total={calculateTotal().total}
               onIncrease={(id) => updateQuantity(id, 1)}
               onDecrease={(id) => updateQuantity(id, -1)}
+              onRemoval={(item) => updateQuantity(item.id, item.quantity * -1)}
               onOrderComplete={handleOrderCompletion}
               user={user}
               navigation={{ navigate: (screen) => setActiveTab(screen) }}

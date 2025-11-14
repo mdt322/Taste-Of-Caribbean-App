@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, onDecrease, onCheckout }) => {
+const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, onDecrease, onRemoval, onCheckout }) => {
   if (items.length === 0) {
     return (
       <SafeAreaView style={styles.emptyContainer}>
@@ -47,6 +47,9 @@ const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, on
                   <Text style={styles.quantityButtonText}>+</Text>
                 </TouchableOpacity>
               </View>
+              <TouchableOpacity style={styles.removeButton} onPress={() => onRemoval(item)}>
+                <Text style={{ fontSize: 18, textAlign: 'center' }}>{'\u{1F5D1}'}</Text>
+              </TouchableOpacity>
               <Text style={styles.itemUnitPrice}>
                 ${typeof item.price === 'number' ? item.price.toFixed(2) : (item.price || '0').replace('$', '')} each
               </Text>
@@ -206,6 +209,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
+  removeButton: {
+    marginRight: 'auto',
+    marginLeft: 5,
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: '#f0f8f4',
+    justifyContent: 'center',
+    alignitems: 'center',
+  },
+
   summary: {
     padding: 16,
     backgroundColor: '#fff',

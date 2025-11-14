@@ -9,6 +9,7 @@ const CartScreen = ({
   onAddToCart,
   onIncrease,
   onDecrease,
+  onRemoval,
   onOrderComplete
 }) => {
   // Calculate cart totals properly
@@ -58,6 +59,7 @@ const CartScreen = ({
           total={total}
           onIncrease={onIncrease || (() => console.log('Increase'))}
           onDecrease={onDecrease || (() => console.log('Decrease'))}
+          onRemoval={onRemoval || (() => console.log('Removing Item'))}
           onCheckout={() => setShowCheckout(true)}
         />
       )}
