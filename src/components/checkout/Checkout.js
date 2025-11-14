@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
-import { saveOrder } from '../../utils/orderStorage';
+// import { saveOrder } from '../../utils/orderStorage';
 
 const STORE_LOCATION = {
   address: '4 Branford Place',
@@ -63,7 +63,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
         storeLocation: STORE_LOCATION
       };
 
-      await saveOrder(order);
+      // await saveOrder(order);
 
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -289,7 +289,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
         {renderStoreLocation()}
         {renderDeliveryOptions()}
         {renderTimeSelection()}
-  {renderCartSummary()}
+        {renderCartSummary()}
         {renderLoyaltyPoints()}
         <TouchableOpacity
           style={[styles.applePayButton, (!selectedTime || isLoading) && styles.applePayButtonDisabled]}
