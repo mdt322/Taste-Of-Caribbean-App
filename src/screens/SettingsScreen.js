@@ -11,7 +11,7 @@ import {
   TextInput,
 } from 'react-native';
 
-const SettingsScreen = ({ user, onBack, navigation, toggleTheme, colors, theme }) => {
+const SettingsScreen = ({ user, onBack, onNavigation, toggleTheme, colors, theme }) => {
   const [showPasswordReset, setShowPasswordReset] = useState(false);
 
   const handlePasswordReset = () => {

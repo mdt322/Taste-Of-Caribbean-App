@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  TouchableOpacity, 
-  Modal, 
-  View, 
-  StatusBar, 
-  Platform 
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Modal,
+  View,
+  StatusBar,
+  Platform
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
@@ -114,16 +114,16 @@ const App = () => {
   const handleLoginSuccess = (userData) => {
     // Handle case where userData is the email string (for backward compatibility)
     const email = typeof userData === 'string' ? userData : (userData?.email || '');
-    const name = typeof userData === 'string' 
-      ? email.split('@')[0] 
+    const name = typeof userData === 'string'
+      ? email.split('@')[0]
       : userData?.name || userData?.full_name || email.split('@')[0];
-      
+
     const isAdminUser = email.toLowerCase() === 'kg539@njit.edu'; // Case-insensitive admin check for kg539@njit.edu
-    
+
     console.log('Login successful:', { email, isAdmin: isAdminUser, userData });
-    
+
     setIsAdmin(isAdminUser);
-    
+
     // Use data from the server if available, otherwise use defaults
     const userObj = {
       name: name,
@@ -134,7 +134,7 @@ const App = () => {
       avatar: userData?.avatar || null,
       isAdmin: isAdminUser
     };
-    
+
     setUser(userObj);
     console.log('User state after login:', userObj);
   };

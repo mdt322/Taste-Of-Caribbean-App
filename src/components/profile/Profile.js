@@ -49,7 +49,7 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
         return <SettingsScreen
             user={user}
             onBack={() => setShowSettings(false)}
-            navigation={navigation}
+            onNavigate={onNavigate}
             toggleTheme={() => {
                 // TODO: Implement theme toggle functionality
             }}
@@ -158,13 +158,13 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                             <View style={styles.section}>
                                 <Text style={styles.sectionTitle}>Admin Controls</Text>
                                 <View style={styles.adminButtonsContainer}>
-                                    <TouchableOpacity 
+                                    <TouchableOpacity
                                         style={[styles.adminButton, styles.viewUsersButton]}
                                         onPress={() => onNavigate('Admin')}
                                     >
                                         <Text style={styles.adminButtonText}>View All Users</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity 
+                                    <TouchableOpacity
                                         style={[styles.adminButton, styles.manageMenuButton]}
                                         onPress={() => onNavigate('Admin')} // TODO: Change to 'ManageMenu' when that screen is created
                                     >
@@ -187,7 +187,7 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.actionCard}
-                                    onPress={() => navigation?.navigate('Rewards')}
+                                    onPress={() => onNavigate('Rewards')}
                                 >
                                     <Text style={styles.actionIcon}>🎁</Text>
                                     <Text style={styles.actionText}>Rewards</Text>
