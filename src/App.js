@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { View, TouchableOpacity, Text } from 'react-native';
 
-// Import the actual RewardsScreen component
 import RewardsScreen from './screens/RewardsScreen';
 import CartScreen from './screens/CartScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import PrivilegedOptions from './screens/PrivilegedOptions';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,12 +17,24 @@ export default function App() {
     name: 'John Doe',
     email: 'john@example.com',
     loyaltyPoints: 150,
+    isAdmin: true,
   });
   const [cart, setCart] = useState([]);
+  const tabBarRef = useRef(null);
+  const [showUsersList, setShowUsersList] = useState(false);
+
+  const handleLoginSuccess = (userData) => {
+    const isAdmin = userData.email === 'kg539@njit.edu';
+    setUser({
+      ...userData,
+      isAdmin
+    });
+    tabBarRef.current?.navigate('Profile');
+  };
+
 
   const handleAddToCart = (item) => {
     setCart((prevCart) => [...prevCart, { ...item, quantity: 1 }]);
-    console.log('Added to cart:', item);
   };
 
   const handleIncrease = (itemId) => {
@@ -45,24 +59,39 @@ export default function App() {
 
   const handleOrderComplete = () => {
     setCart([]);
-    console.log('Order completed, cart cleared');
   };
 
-  console.log('App.js: Starting with RewardsScreen component');
-  console.log('App.js: User state:', user);
-  console.log('App.js: Cart state:', cart);
 
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <Tab.Navigator
-          screenOptions={{
-            headerShown: false,
+          ref={tabBarRef}
+          screenOptions={({ route }) => ({
+            headerShown: route.name === 'Rewards' || route.name === 'Profile',
+            headerTitle: 'Taste of Caribbean',
             tabBarStyle: {
               backgroundColor: '#fff',
               height: 60,
+              paddingBottom: 10,
+              paddingTop: 5,
             },
-          }}
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+
+              if (route.name === 'Rewards') {
+                iconName = focused ? 'gift' : 'gift-outline';
+              } else if (route.name === 'Cart') {
+                iconName = focused ? 'cart' : 'cart-outline';
+              } else if (route.name === 'Profile') {
+                iconName = focused ? 'person' : 'person-outline';
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: '#007AFF',
+            tabBarInactiveTintColor: 'gray',
+          })}
         >
           <Tab.Screen
             name="Rewards"
@@ -74,9 +103,7 @@ export default function App() {
               onDecrease: handleDecrease,
               onOrderComplete: handleOrderComplete,
               cart,
-            }}
-            options={{
-              tabBarLabel: 'Rewards',
+              onLoginSuccess: handleLoginSuccess
             }}
           />
           <Tab.Screen
@@ -91,8 +118,22 @@ export default function App() {
               onOrderComplete: handleOrderComplete,
             }}
             options={{
-              tabBarLabel: 'Cart',
               tabBarBadge: cart.length > 0 ? cart.length : undefined,
+            }}
+          />
+          <Tab.Screen
+            name="Profile"
+            children={() => (
+              <ProfileScreen 
+                user={user}
+                cart={cart}
+                onAddToCart={handleAddToCart}
+                onLoginSuccess={handleLoginSuccess}
+                onViewUsers={() => setShowUsersList(true)}
+              />
+            )}
+            options={{
+              title: 'My Profile',
             }}
           />
         </Tab.Navigator>

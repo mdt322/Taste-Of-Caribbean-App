@@ -132,9 +132,14 @@ const CustomerDetail = ({ customer, onBack, onRoleUpdate }) => {
 
   return (
     <View style={styles.detailContainer}>
-      <TouchableOpacity style={styles.backButton} onPress={onBack}>
-        <Text style={styles.backButtonText}>← Back to List</Text>
-      </TouchableOpacity>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={onBack}
+        >
+          <Text style={styles.backButtonText}>← Back to List</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.detailCard}>
         <Text style={styles.detailTitle}>Customer Details</Text>
@@ -312,6 +317,10 @@ const PrivilegedOptions = ({ onNavigate }) => {
   const [sortBy, setSortBy] = useState('id');
   const [currentUserRole, setCurrentUserRole] = useState('admin'); // This should come from your auth context
   
+  const handleBackToProfile = () => {
+    onNavigate('More');
+  };
+  
   const handleRoleUpdate = async (userId, newRole) => {
     try {
       // Call your API to update the user's role
@@ -438,7 +447,15 @@ const PrivilegedOptions = ({ onNavigate }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Customer Overview</Text>
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={handleBackToProfile}
+        >
+          <Text style={styles.backButtonText}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>Customer Overview</Text>
+      </View>
 
       {selectedCustomer ? (
         <CustomerDetail
@@ -618,11 +635,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     padding: 16,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
     textAlign: 'center',
+    marginLeft: 10,
   },
   loadingContainer: {
     flex: 1,
@@ -664,13 +687,29 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 10,
   },
-  backButton: {
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 20,
     padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  backButton: {
+    padding: 6,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 20,
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   backButtonText: {
     color: '#007AFF',
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: -2,
   },
   detailCard: {
     backgroundColor: '#f9f9f9',

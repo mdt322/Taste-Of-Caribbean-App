@@ -2,17 +2,17 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import AdminNavigator from './AdminNavigator';
 
 // Import screens
 import MenuScreen from '../screens/MenuScreen';
 import RewardsShop from '../components/rewards/Rewards';
 import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import PrivilegedOptions from '../screens/PrivilegedOptions';
 
 const Tab = createBottomTabNavigator();
 
-export default function AppNavigator({ user, cart, onAddToCart, onLogout, isAdmin = false }) {
+function MainTabs({ user, cart, onAddToCart, onLogout, isAdmin = false }) {
   console.log('AppNavigator: Received user:', user);
   console.log('AppNavigator: Received cart:', cart);
 
@@ -33,8 +33,7 @@ export default function AppNavigator({ user, cart, onAddToCart, onLogout, isAdmi
   };
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator
+    <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -84,11 +83,12 @@ export default function AppNavigator({ user, cart, onAddToCart, onLogout, isAdmi
         {isAdmin && (
           <Tab.Screen
             name="Admin"
-            component={PrivilegedOptions}
+            component={AdminNavigator}
             options={{
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="shield" size={size} color={color} />
               ),
+              headerShown: false
             }}
           />
         )}
@@ -98,6 +98,5 @@ export default function AppNavigator({ user, cart, onAddToCart, onLogout, isAdmi
           initialParams={{ user, onLogout, isAdmin }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 }

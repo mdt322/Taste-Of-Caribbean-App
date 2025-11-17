@@ -55,8 +55,14 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
 
       setStatusMessage('Login successful!');
       if (onLoginSuccess) {
-        // Pass server-provided user object to parent
-        onLoginSuccess((data && data.user) ? data.user : { email });
+        // Pass server-provided user object to parent with all necessary fields
+        const userData = {
+          email: data.user?.email || email,
+          name: data.user?.name || email.split('@')[0],
+          loyaltyPoints: data.user?.loyaltyPoints || 0,
+          isAdmin: (data.user?.email || email) === 'kg539@njit.edu'
+        };
+        onLoginSuccess(userData);
       }
 
       // Hide status after 2 seconds and close modal
@@ -64,7 +70,7 @@ const LoginScreen = ({ setAuthFlag, setAuthMode, onLoginSuccess }) => {
         setShowStatus(false);
         setAuthFlag(false); // Close auth modal after successful login
         setLoading(false);
-      }, 2000);
+      }, 1000); // Reduced delay for better UX
 
     } catch (error) {
       Alert.alert('Login Failed', error.message);

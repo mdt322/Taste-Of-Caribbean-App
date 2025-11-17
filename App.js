@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
+import { Ionicons } from '@expo/vector-icons';  // Assuming you need this for icons elsewhere
 
 // Import components
 import Home from './src/components/home/Home';
@@ -136,22 +137,28 @@ const App = () => {
 
     setUser(userObj);
     console.log('User state after login:', userObj);
+    setAuthFlag(false);  // Close the auth modal after successful login
+    setActiveTab('More');  // Navigate to Admin if admin, else Profile
   };
 
   const handleRegisterSuccess = (userFromServer) => {
     if (!userFromServer) return;
-    setUser({
+    const userObj = {
       name: userFromServer.name || userFromServer.full_name || '',
       email: userFromServer.email,
       joinDate: userFromServer.joinDate || userFromServer.created_at || new Date().toLocaleDateString(),
       loyaltyPoints: userFromServer.loyaltyPoints ?? userFromServer.rewards ?? 0,
       memberSince: userFromServer.memberSince || userFromServer.created_at || new Date().toLocaleDateString(),
       avatar: userFromServer.avatar || null,
-    });
+    };
+    setUser(userObj);
+    setAuthFlag(false);  // Close the auth modal after successful registration
+    setActiveTab('More');  // Navigate to Profile after registration
   };
 
   const handleLogout = () => {
     setUser(null);
+    setIsAdmin(false);
     setAuthFlag(false);
   };
 
@@ -169,13 +176,13 @@ const App = () => {
     setCartFlag(false);
   };
 
-  // Check if user is admin (in a real app, this would come from your auth system)
+
   const checkAdminStatus = (userEmail) => {
-    // This is just an example - in a real app, this would check against your user database
+    
     return userEmail === 'admin@example.com';
   };
 
-  // Renders page in main screen depending on activeTab
+  
   const renderPage = () => {
     switch (activeTab) {
 

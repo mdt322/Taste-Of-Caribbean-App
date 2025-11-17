@@ -1,4 +1,25 @@
 {
-  "compilerOptions": {},
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "strict": true,
+    "jsx": "react-native",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*", "src/*"]
+    },
+    "types": ["node", "jest"],
+    "allowJs": true,
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "**/__tests__/*",
+    "**/__mocks__/*"
+  ],
   "extends": "expo/tsconfig.base"
 }

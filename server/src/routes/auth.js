@@ -56,10 +56,8 @@ router.post('/login', async (req, res) => {
   try {
     const { error, value } = loginSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
-
-    const user = await findUserByEmail(value.email);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
+    
+    let user = await findUserByEmail(value.email);    if (!user) return res.status(404).json({ message: 'User not found' });
     const isPasswordValid = await bcrypt.compare(value.password, user.password_hash);
     if (!isPasswordValid) return res.status(401).json({ message: 'Invalid password' });
 
@@ -71,7 +69,7 @@ router.post('/login', async (req, res) => {
         console.error('Failed to set default rewards for user:', e);
       }
       // Re-fetch user after setting default
-      const refreshed = await findUserByEmail(user.email);
+      let refreshed = await findUserByEmail(user.email);
       if (refreshed) user = refreshed;
     }
 
