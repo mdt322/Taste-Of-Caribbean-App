@@ -1,29 +1,25 @@
 /**
  * Home Page
- * 
+ *
  * What this file does:
  * - Shows the main page after logging in
- * - Has tabs for Home, Menu, and Rewards
- * - Shows featured dishes of the day
- * - Displays special offers
- * 
- * Components needed:
- * - Navigation tabs
- * - Featured dishes section
- * - Special offers section
- * 
- * Features to add:
- * 1. Welcome message with user's name
- * 2. Navigation tabs (Home/Menu/Rewards)
- * 3. Featured dishes with pictures
- * 4. Special offers of the day
- * 5. Quick order buttons
+ * - Displays logo + address + phone number at top
+ * - Shows rewards, news, and account information
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ImageBackground
+} from 'react-native';
 
 const backgroundImage = require('../../../assets/jerk-chicken.jpeg');
+const logoImage = require('../../../assets/Logo.png'); // <-- MAKE SURE THIS EXISTS
 
 const Home = ({ user, onNavigate, onSignIn }) => {
   const loyaltyPoints = user?.loyaltyPoints ?? 0;
@@ -42,6 +38,27 @@ const Home = ({ user, onNavigate, onSignIn }) => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+
+          {/* -------------------------------- */}
+          {/*     PERSISTENT LOGO + CONTACT    */}
+          {/* -------------------------------- */}
+          <View style={styles.topBar}>
+            <Image
+              source={logoImage}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+
+            <View style={styles.contactInfo}>
+              <Text style={styles.contactText}>Taste of the Caribbean Food Market</Text>
+              <Text style={styles.contactText}>931 John F. Kennedy Blvd, Bayonne, NJ 07002</Text>
+              <Text style={styles.contactText}>Phone: (201) 339-4200</Text>
+            </View>
+          </View>
+
+          {/* -------------------------------- */}
+          {/*            WELCOME AREA           */}
+          {/* -------------------------------- */}
           <View style={styles.header}>
             <Text style={styles.title}>
               {user ? `Welcome back, ${user.name}!` : 'Welcome to Taste of Caribbean'}
@@ -53,23 +70,30 @@ const Home = ({ user, onNavigate, onSignIn }) => {
             </Text>
           </View>
 
+          {/* -------------------------------- */}
+          {/*         LOYALTY SECTION          */}
+          {/* -------------------------------- */}
           {user ? (
             <View style={styles.pointsCard}>
               <View style={styles.pointsHeader}>
                 <Text style={styles.pointsTitle}>Loyalty Points</Text>
                 <Text style={styles.pointsValue}>{loyaltyPoints}</Text>
               </View>
+
               <Text style={styles.pointsDescription}>
                 Earn points with every order! 1 point per $1 spent.
               </Text>
+
               <View style={styles.pointsProgress}>
                 <View style={[styles.pointsProgressBar, { width: `${progress}%` }]} />
               </View>
+
               <Text style={styles.pointsNextReward}>
                 {loyaltyPoints >= 500
                   ? 'You have a reward ready to redeem!'
                   : `${pointsToNextReward} points until your next free meal!`}
               </Text>
+
               {onNavigate && (
                 <TouchableOpacity
                   style={styles.secondaryButton}
@@ -86,6 +110,7 @@ const Home = ({ user, onNavigate, onSignIn }) => {
                 Sign in to track your rewards, redeem exclusive offers, and access personalized
                 recommendations.
               </Text>
+
               {onSignIn && (
                 <TouchableOpacity style={styles.primaryButton} onPress={onSignIn}>
                   <Text style={styles.primaryButtonText}>Sign In</Text>
@@ -94,20 +119,25 @@ const Home = ({ user, onNavigate, onSignIn }) => {
             </View>
           )}
 
+          {/* -------------------------------- */}
+          {/*          NEWS SECTION             */}
+          {/* -------------------------------- */}
           <View style={styles.placeholderCard}>
             <Text style={styles.cardTitle}>Latest News</Text>
             <Text style={styles.cardText}>
-              Seasonal menus, special events, and announcements will appear here. Check back soon for
-              the latest updates!
+              Seasonal menus, special events, and announcements will appear here.
             </Text>
           </View>
 
+          {/* -------------------------------- */}
+          {/*       ORDER HISTORY PLACEHOLDER    */}
+          {/* -------------------------------- */}
           <View style={styles.placeholderCard}>
             <Text style={styles.cardTitle}>Order History</Text>
             <Text style={styles.cardText}>
-              Your recent orders and quick re-order options will live here. This feature is coming
-              soon.
+              Your recent orders and re-order options will appear here soon.
             </Text>
+
             {onNavigate && (
               <TouchableOpacity
                 style={styles.secondaryButton}
@@ -119,11 +149,16 @@ const Home = ({ user, onNavigate, onSignIn }) => {
           </View>
 
           <View style={styles.bottomSpacing} />
+
         </ScrollView>
       </View>
     </ImageBackground>
   );
 };
+
+/* -------------------------------- */
+/*            STYLES                */
+/* -------------------------------- */
 
 const styles = StyleSheet.create({
   background: {
@@ -144,6 +179,28 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     paddingHorizontal: 20,
   },
+
+  /* --- Top Logo + Contact --- */
+  topBar: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logo: {
+    width: 150,
+    height: 90,
+    marginBottom: 6,
+  },
+  contactInfo: {
+    alignItems: 'center',
+  },
+  contactText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2c3e50',
+    textAlign: 'center',
+  },
+
+  /* --- Header Area --- */
   header: {
     marginBottom: 16,
   },
@@ -158,6 +215,8 @@ const styles = StyleSheet.create({
     color: '#6c757d',
     lineHeight: 22,
   },
+
+  /* --- Points Card --- */
   pointsCard: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -172,7 +231,6 @@ const styles = StyleSheet.create({
   pointsHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 8,
   },
   pointsTitle: {
@@ -207,6 +265,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 12,
   },
+
+  /* --- Sign In Card --- */
   signInCard: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -229,6 +289,8 @@ const styles = StyleSheet.create({
     color: '#6c757d',
     lineHeight: 21,
   },
+
+  /* --- Card Style --- */
   placeholderCard: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -251,6 +313,8 @@ const styles = StyleSheet.create({
     color: '#6c757d',
     lineHeight: 20,
   },
+
+  /* --- Buttons --- */
   secondaryButton: {
     marginTop: 16,
     alignSelf: 'flex-start',
@@ -267,7 +331,6 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     marginTop: 16,
-    alignSelf: 'flex-start',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -278,6 +341,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+
   bottomSpacing: {
     height: 40,
   },
