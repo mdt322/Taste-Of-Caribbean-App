@@ -1,12 +1,3 @@
-/**
- * Home Page
- *
- * What this file does:
- * - Shows the main page after logging in
- * - Displays logo + address + phone number at top
- * - Shows rewards, news, and account information
- */
-
 import React from 'react';
 import {
   View,
@@ -19,180 +10,167 @@ import {
 } from 'react-native';
 
 const backgroundImage = require('../../../assets/jerk-chicken.jpeg');
-const logoImage = require('../../../assets/Logo.png'); // <-- MAKE SURE THIS EXISTS
+const logoImage = require('../../../assets/TOC_Logo.png');
 
 const Home = ({ user, onNavigate, onSignIn }) => {
-  const loyaltyPoints = user?.loyaltyPoints ?? 0;
-  const progress = Math.min((loyaltyPoints / 500) * 100, 100);
-  const pointsToNextReward = Math.max(500 - loyaltyPoints, 0);
+  const points = user?.loyaltyPoints ?? 0;
+  const progress = Math.min((points / 500) * 100, 100);
+  const pointsToNext = Math.max(500 - points, 0);
 
   return (
-    <ImageBackground
-      source={backgroundImage}
-      style={styles.background}
-      imageStyle={styles.backgroundImage}
-    >
-      <View style={styles.overlay}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+    <View style={styles.rootContainer}>
+      
+    
+      <View style={styles.headerContainer}>
+        <Image source={logoImage} style={styles.logo} resizeMode="contain" />
 
-          {/* -------------------------------- */}
-          {/*     PERSISTENT LOGO + CONTACT    */}
-          {/* -------------------------------- */}
-          <View style={styles.topBar}>
-            <Image
-              source={logoImage}
-              style={styles.logo}
-              resizeMode="contain"
-            />
+        <View style={styles.contactBlock}>
+          <Text style={styles.contactText}>Taste of the Caribbean</Text>
+          <Text style={styles.contactText}>4 Branford Pl, Newark, NJ 07102</Text>
+          <Text style={styles.contactText}>Phone: (555) 123-4567</Text>
+        </View>
+      </View>
 
-            <View style={styles.contactInfo}>
-              <Text style={styles.contactText}>Taste of the Caribbean Food Market</Text>
-              <Text style={styles.contactText}>931 John F. Kennedy Blvd, Bayonne, NJ 07002</Text>
-              <Text style={styles.contactText}>Phone: (201) 339-4200</Text>
-            </View>
-          </View>
+      {/* ------------------------------ */}
+      {/*   PAGE BACKGROUND + CONTENT     */}
+      {/* ------------------------------ */}
+      <ImageBackground
+        source={backgroundImage}
+        style={styles.background}
+        imageStyle={styles.backgroundImage}
+      >
+        <View style={styles.overlay}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollSpacing}
+          >
 
-          {/* -------------------------------- */}
-          {/*            WELCOME AREA           */}
-          {/* -------------------------------- */}
-          <View style={styles.header}>
-            <Text style={styles.title}>
-              {user ? `Welcome back, ${user.name}!` : 'Welcome to Taste of Caribbean'}
-            </Text>
-            <Text style={styles.subtitle}>
-              {user
-                ? 'Here is a quick look at your rewards and updates.'
-                : 'Sign in to start earning loyalty points and see personalized updates.'}
-            </Text>
-          </View>
-
-          {/* -------------------------------- */}
-          {/*         LOYALTY SECTION          */}
-          {/* -------------------------------- */}
-          {user ? (
-            <View style={styles.pointsCard}>
-              <View style={styles.pointsHeader}>
-                <Text style={styles.pointsTitle}>Loyalty Points</Text>
-                <Text style={styles.pointsValue}>{loyaltyPoints}</Text>
-              </View>
-
-              <Text style={styles.pointsDescription}>
-                Earn points with every order! 1 point per $1 spent.
+            {/* WELCOME */}
+            <View style={styles.section}>
+              <Text style={styles.title}>
+                {user ? `Welcome back, ${user.name}!` : 'Welcome to Taste of Caribbean'}
               </Text>
 
-              <View style={styles.pointsProgress}>
-                <View style={[styles.pointsProgressBar, { width: `${progress}%` }]} />
-              </View>
+              <Text style={styles.subtitle}>
+                {user
+                  ? 'Here is a quick look at your rewards and updates.'
+                  : 'Sign in to start earning loyalty points and view personalized updates.'}
+              </Text>
+            </View>
 
-              <Text style={styles.pointsNextReward}>
-                {loyaltyPoints >= 500
-                  ? 'You have a reward ready to redeem!'
-                  : `${pointsToNextReward} points until your next free meal!`}
+            {/* REWARDS SECTION */}
+            {user ? (
+              <View style={styles.card}>
+                <View style={styles.pointsRow}>
+                  <Text style={styles.pointsLabel}>Loyalty Points</Text>
+                  <Text style={styles.pointsNumber}>{points}</Text>
+                </View>
+
+                <Text style={styles.info}>
+                  Earn 1 point for every $1 spent.
+                </Text>
+
+                <View style={styles.progressBar}>
+                  <View style={[styles.progressFill, { width: `${progress}%` }]} />
+                </View>
+
+                <Text style={styles.rewardText}>
+                  {points >= 500
+                    ? 'You have a reward available!'
+                    : `${pointsToNext} points until your next free meal!`}
+                </Text>
+
+                {onNavigate && (
+                  <TouchableOpacity
+                    style={styles.secondaryButton}
+                    onPress={() => onNavigate('Rewards')}
+                  >
+                    <Text style={styles.secondaryButtonText}>Redeem Rewards</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            ) : (
+              <View style={styles.card}>
+                <Text style={styles.signInTitle}>Earn Rewards</Text>
+                <Text style={styles.info}>
+                  Sign in to collect points, redeem offers, and view your order history.
+                </Text>
+
+                {onSignIn && (
+                  <TouchableOpacity style={styles.primaryButton} onPress={onSignIn}>
+                    <Text style={styles.primaryButtonText}>Sign In</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+
+            {/* NEWS */}
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Latest News</Text>
+              <Text style={styles.cardText}>
+                Special events, seasonal menu changes, and announcements will appear here.
+              </Text>
+            </View>
+
+            {/* HISTORY */}
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Order History</Text>
+              <Text style={styles.cardText}>
+                Your recent orders will appear here soon.
               </Text>
 
               {onNavigate && (
                 <TouchableOpacity
                   style={styles.secondaryButton}
-                  onPress={() => onNavigate('Rewards')}
+                  onPress={() => onNavigate('More')}
                 >
-                  <Text style={styles.secondaryButtonText}>Redeem Rewards</Text>
+                  <Text style={styles.secondaryButtonText}>View Profile</Text>
                 </TouchableOpacity>
               )}
             </View>
-          ) : (
-            <View style={styles.signInCard}>
-              <Text style={styles.signInTitle}>Earn Loyalty Points</Text>
-              <Text style={styles.signInText}>
-                Sign in to track your rewards, redeem exclusive offers, and access personalized
-                recommendations.
-              </Text>
 
-              {onSignIn && (
-                <TouchableOpacity style={styles.primaryButton} onPress={onSignIn}>
-                  <Text style={styles.primaryButtonText}>Sign In</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
+            <View style={{ height: 60 }} />
 
-          {/* -------------------------------- */}
-          {/*          NEWS SECTION             */}
-          {/* -------------------------------- */}
-          <View style={styles.placeholderCard}>
-            <Text style={styles.cardTitle}>Latest News</Text>
-            <Text style={styles.cardText}>
-              Seasonal menus, special events, and announcements will appear here.
-            </Text>
-          </View>
-
-          {/* -------------------------------- */}
-          {/*       ORDER HISTORY PLACEHOLDER    */}
-          {/* -------------------------------- */}
-          <View style={styles.placeholderCard}>
-            <Text style={styles.cardTitle}>Order History</Text>
-            <Text style={styles.cardText}>
-              Your recent orders and re-order options will appear here soon.
-            </Text>
-
-            {onNavigate && (
-              <TouchableOpacity
-                style={styles.secondaryButton}
-                onPress={() => onNavigate('More')}
-              >
-                <Text style={styles.secondaryButtonText}>View Profile</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <View style={styles.bottomSpacing} />
-
-        </ScrollView>
-      </View>
-    </ImageBackground>
+          </ScrollView>
+        </View>
+      </ImageBackground>
+    </View>
   );
 };
 
-/* -------------------------------- */
-/*            STYLES                */
-/* -------------------------------- */
+
+const HEADER_HEIGHT = 165; // controls how high the header sits
 
 const styles = StyleSheet.create({
-  background: {
+  rootContainer: {
     flex: 1,
-  },
-  backgroundImage: {
-    opacity: 0.55,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  scrollContent: {
-    paddingVertical: 24,
-    paddingHorizontal: 20,
   },
 
-  /* --- Top Logo + Contact --- */
-  topBar: {
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: HEADER_HEIGHT,
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    paddingTop: 15,
+    paddingHorizontal: 12,
+    paddingBottom: 10,
     alignItems: 'center',
-    marginBottom: 20,
+    zIndex: 10,
+    elevation: 10,
   },
+
   logo: {
-    width: 150,
-    height: 90,
-    marginBottom: 6,
+    width: 170,
+    height: 95,
+    marginBottom: 4,
   },
-  contactInfo: {
+
+  contactBlock: {
     alignItems: 'center',
   },
+
   contactText: {
     fontSize: 14,
     fontWeight: '600',
@@ -200,150 +178,138 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  /* --- Header Area --- */
-  header: {
-    marginBottom: 16,
+  /* ---------- Background Overlay ---------- */
+  background: {
+    flex: 1,
+    marginTop: HEADER_HEIGHT, // pushes content BELOW header
   },
+
+  backgroundImage: {
+    opacity: 0.53,
+  },
+
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.78)',
+  },
+
+
+  scrollSpacing: {
+    paddingHorizontal: 20,
+    paddingTop: 20, // content starts cleanly below header
+    paddingBottom: 40,
+  },
+
+ 
+  section: {
+    marginBottom: 18,
+  },
+
   title: {
     fontSize: 26,
     fontWeight: '700',
     color: '#2c3e50',
     marginBottom: 6,
   },
+
   subtitle: {
     fontSize: 16,
     color: '#6c757d',
-    lineHeight: 22,
   },
 
-  /* --- Points Card --- */
-  pointsCard: {
+  card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: 14,
+    padding: 18,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     elevation: 3,
-  },
-  pointsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  pointsTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#2c3e50',
-  },
-  pointsValue: {
-    fontSize: 30,
-    fontWeight: '700',
-    color: '#ffb300',
-  },
-  pointsDescription: {
-    fontSize: 14,
-    color: '#6c757d',
-    marginBottom: 16,
-  },
-  pointsProgress: {
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#e9ecef',
-    marginBottom: 8,
-    overflow: 'hidden',
-  },
-  pointsProgressBar: {
-    height: '100%',
-    backgroundColor: '#ffb300',
-  },
-  pointsNextReward: {
-    fontSize: 13,
-    color: '#28a745',
-    fontWeight: '600',
-    marginBottom: 12,
   },
 
-  /* --- Sign In Card --- */
-  signInCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  signInTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#2c3e50',
-    marginBottom: 8,
-  },
-  signInText: {
-    fontSize: 15,
-    color: '#6c757d',
-    lineHeight: 21,
-  },
-
-  /* --- Card Style --- */
-  placeholderCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
   cardTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#2c3e50',
-    marginBottom: 8,
+    marginBottom: 6,
   },
+
   cardText: {
     fontSize: 14,
     color: '#6c757d',
     lineHeight: 20,
   },
 
-  /* --- Buttons --- */
+  /* ---------- Rewards ---------- */
+  pointsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+
+  pointsLabel: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2c3e50',
+  },
+
+  pointsNumber: {
+    fontSize: 30,
+    fontWeight: '700',
+    color: '#ffb300',
+  },
+
+  info: {
+    fontSize: 14,
+    color: '#6c757d',
+    marginBottom: 12,
+  },
+
+  progressBar: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#e9ecef',
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#ffb300',
+  },
+
+  rewardText: {
+    fontSize: 13,
+    color: '#28a745',
+    fontWeight: '600',
+  },
+
+  /* ---------- Buttons ---------- */
+  primaryButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#3498db',
+    borderRadius: 8,
+  },
+
+  primaryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+
   secondaryButton: {
-    marginTop: 16,
-    alignSelf: 'flex-start',
+    marginTop: 14,
+    borderColor: '#3498db',
+    borderWidth: 1,
+    borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 18,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#3498db',
   },
+
   secondaryButtonText: {
     color: '#3498db',
     fontSize: 14,
     fontWeight: '600',
-  },
-  primaryButton: {
-    marginTop: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    backgroundColor: '#3498db',
-  },
-  primaryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-
-  bottomSpacing: {
-    height: 40,
   },
 });
 
