@@ -10,9 +10,14 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
+// Pulls items from collections menu and merch with a point field
+// import { useRewards } from '../hooks/useRewards';
 
 const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
   const [activeSection, setActiveSection] = useState('food');
+
+  // Use instead of separate arrays for food and merch rewards
+  // const { rewardItems, loading, error} = useRewards();
 
   // Food rewards
   const foodRewards = [
@@ -160,9 +165,13 @@ const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
           {activeSection === 'food' ? 'Food Rewards' : 'Merchandise Rewards'}
         </Text>
 
-        {activeSection === 'food'
-          ? foodRewards.map(renderRewardCard)
+        {activeSection === 'food' ?
+          foodRewards.map(renderRewardCard)
           : merchRewards.map(renderRewardCard)
+
+          // Takes actual items from the database thats in the rewardItems array
+          // rewardItems.filter(item => item.reward_type === 'food')
+          // : rewardItems.filter(item => item.reward_type === 'merch')
         }
       </ScrollView>
     </>
