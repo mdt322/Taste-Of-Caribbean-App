@@ -19,6 +19,23 @@ const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
   // Use instead of separate arrays for food and merch rewards
   const { rewardItems, loading, error } = useRewards();
 
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <Text>Loading rewards...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  // Following is deprecated test data
   // Food rewards
   // const foodRewards = [
   //   { id: 'food-1', name: 'Free Jerk Chicken', description: 'Traditional Jamaican jerk chicken', points: 100, category: 'food' },
@@ -179,6 +196,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     padding: 24,

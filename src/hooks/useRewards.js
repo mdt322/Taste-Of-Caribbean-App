@@ -19,15 +19,19 @@ export const useRewards = () => {
             where("points", "!=", null)
         );
 
+        // both snapshots run asyncroniously, so both adjust the loading flag as needed
+        // eg both would need to be ready to have the page load in RewardsScreen
         const unsubscribeFood = onSnapshot(
             foodQuery,
             (snapshot) => {
+                setLoading(true);
                 const items = snapshot.docs.map(doc => ({
                     id: doc.id,
                     reward_type: "food",
                     ...doc.data()
                 }));
                 setFoodRewards(items);
+                setLoading(false);
             },
             (err) => {
                 console.error('Error fetching reward items:', err);
@@ -39,12 +43,14 @@ export const useRewards = () => {
         const unsubscribeMerch = onSnapshot(
             merchQuery,
             (snapshot) => {
+                setLoading(true);
                 const items = snapshot.docs.map(doc => ({
                     id: doc.id,
                     reward_type: "merch",
                     ...doc.data()
                 }));
                 setMerchRewards(items);
+                setLoading(false);
             },
             (err) => {
                 console.error('Error fetching reward items:', err);
