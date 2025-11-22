@@ -8,6 +8,7 @@ import {
   Image,
   ImageBackground
 } from 'react-native';
+import { COLORS, SPACING, BORDER_RADIUS, TYPOGRAPHY } from '../../utils/theme';
 
 const backgroundImage = require('../../../assets/jerk-chicken.jpeg');
 const logoImage = require('../../../assets/TOC_Logo.png');
@@ -24,10 +25,11 @@ const Home = ({ user, onNavigate, onSignIn }) => {
       <View style={styles.headerContainer}>
         <Image source={logoImage} style={styles.logo} resizeMode="contain" />
 
-        <View style={styles.contactBlock}>
-          <Text style={styles.contactText}>Taste of the Caribbean</Text>
-          <Text style={styles.contactText}>4 Branford Pl, Newark, NJ 07102</Text>
-          <Text style={styles.contactText}>Phone: (555) 123-4567</Text>
+        <View style={styles.contactWrapper}>
+          <View style={styles.contactBlock}>
+            <Text style={styles.contactText}>4 Branford Pl, Newark, NJ 07102</Text>
+            <Text style={styles.contactText}>+1 (908) 569-4744</Text>
+          </View>
         </View>
       </View>
 
@@ -139,7 +141,7 @@ const Home = ({ user, onNavigate, onSignIn }) => {
 };
 
 
-const HEADER_HEIGHT = 165; // controls how high the header sits
+const HEADER_HEIGHT = 80; // controls how high the header sits
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -147,24 +149,26 @@ const styles = StyleSheet.create({
   },
 
   headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     height: HEADER_HEIGHT,
-    backgroundColor: 'rgba(255,255,255,0.92)',
-    paddingTop: 15,
-    paddingHorizontal: 12,
-    paddingBottom: 10,
-    alignItems: 'center',
+    backgroundColor: COLORS.background.header,
+    paddingHorizontal: SPACING.sm,
     zIndex: 10,
-    elevation: 10,
   },
 
   logo: {
-    width: 170,
-    height: 95,
-    marginBottom: 4,
+    width: 60,
+    height: 60,
+  },
+
+  contactWrapper: {
+    flex: 1,
+    alignItems: 'center',
   },
 
   contactBlock: {
@@ -172,9 +176,9 @@ const styles = StyleSheet.create({
   },
 
   contactText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#2c3e50',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    color: COLORS.text.primary,
     textAlign: 'center',
   },
 
@@ -190,52 +194,54 @@ const styles = StyleSheet.create({
 
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.78)',
+    backgroundColor: COLORS.background.overlay,
   },
 
 
   scrollSpacing: {
-    paddingHorizontal: 20,
-    paddingTop: 20, // content starts cleanly below header
-    paddingBottom: 40,
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.xl,
   },
 
  
   section: {
-    marginBottom: 18,
+    marginBottom: SPACING.lg,
   },
 
   title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#2c3e50',
-    marginBottom: 6,
+    fontSize: TYPOGRAPHY.sizes.xxl,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: COLORS.primary.turquoise,
+    marginBottom: SPACING.sm,
   },
 
   subtitle: {
-    fontSize: 16,
-    color: '#6c757d',
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.text.secondary,
   },
 
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 14,
-    padding: 18,
-    marginBottom: 20,
+    backgroundColor: COLORS.background.primary,
+    borderRadius: BORDER_RADIUS.lg,
+    padding: SPACING.lg,
+    marginBottom: SPACING.xl,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: COLORS.border.light,
   },
 
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#2c3e50',
-    marginBottom: 6,
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: COLORS.primary.turquoise,
+    marginBottom: SPACING.sm,
   },
 
   cardText: {
-    fontSize: 14,
-    color: '#6c757d',
-    lineHeight: 20,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.text.secondary,
+    lineHeight: TYPOGRAPHY.sizes.md + 6,
   },
 
   /* ---------- Rewards ---------- */
@@ -246,70 +252,70 @@ const styles = StyleSheet.create({
   },
 
   pointsLabel: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#2c3e50',
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    color: COLORS.text.primary,
   },
 
   pointsNumber: {
-    fontSize: 30,
-    fontWeight: '700',
-    color: '#ffb300',
+    fontSize: TYPOGRAPHY.sizes.xxxl,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: COLORS.primary.orange,
   },
 
   info: {
-    fontSize: 14,
-    color: '#6c757d',
-    marginBottom: 12,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.text.secondary,
+    marginBottom: SPACING.md,
   },
 
   progressBar: {
     height: 8,
-    borderRadius: 4,
-    backgroundColor: '#e9ecef',
+    borderRadius: BORDER_RADIUS.sm,
+    backgroundColor: COLORS.border.medium,
     overflow: 'hidden',
-    marginBottom: 10,
+    marginBottom: SPACING.sm,
   },
 
   progressFill: {
     height: '100%',
-    backgroundColor: '#ffb300',
+    backgroundColor: COLORS.primary.orange,
   },
 
   rewardText: {
-    fontSize: 13,
-    color: '#28a745',
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.primary.green,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
 
   /* ---------- Buttons ---------- */
   primaryButton: {
-    marginTop: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    backgroundColor: '#3498db',
-    borderRadius: 8,
+    marginTop: SPACING.md,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    backgroundColor: COLORS.primary.turquoise,
+    borderRadius: BORDER_RADIUS.md,
   },
 
   primaryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
+    color: COLORS.text.white,
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
 
   secondaryButton: {
-    marginTop: 14,
-    borderColor: '#3498db',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 18,
+    marginTop: SPACING.md,
+    borderColor: COLORS.primary.turquoise,
+    borderWidth: 2,
+    borderRadius: BORDER_RADIUS.md,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
   },
 
   secondaryButtonText: {
-    color: '#3498db',
-    fontSize: 14,
-    fontWeight: '600',
+    color: COLORS.primary.turquoise,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
 });
 

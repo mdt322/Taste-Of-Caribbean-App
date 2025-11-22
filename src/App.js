@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { View, TouchableOpacity, Text } from 'react-native';
+import { COLORS, SPACING } from './utils/theme';
 
 import RewardsScreen from './screens/RewardsScreen';
 import CartScreen from './screens/CartScreen';
@@ -71,10 +72,12 @@ export default function App() {
             headerShown: route.name === 'Rewards' || route.name === 'Profile',
             headerTitle: 'Taste of Caribbean',
             tabBarStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: COLORS.background.primary,
               height: 60,
-              paddingBottom: 10,
-              paddingTop: 5,
+              paddingBottom: SPACING.sm,
+              paddingTop: SPACING.xs,
+              borderTopWidth: 2,
+              borderTopColor: COLORS.primary.turquoise,
             },
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
@@ -89,8 +92,8 @@ export default function App() {
 
               return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: '#007AFF',
-            tabBarInactiveTintColor: 'gray',
+            tabBarActiveTintColor: COLORS.primary.turquoise,
+            tabBarInactiveTintColor: COLORS.text.secondary,
           })}
         >
           <Tab.Screen
