@@ -12,29 +12,46 @@ import {
 } from 'react-native';
 import { COLORS, SPACING, BORDER_RADIUS, TYPOGRAPHY } from '../utils/theme';
 // Pulls items from collections menu and merch with a point field
-// import { useRewards } from '../hooks/useRewards';
+import { useRewards } from '../hooks/useRewards';
 
 const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
   const [activeSection, setActiveSection] = useState('food');
 
   // Use instead of separate arrays for food and merch rewards
-  // const { rewardItems, loading, error} = useRewards();
+  const { rewardItems, loading, error } = useRewards();
 
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <Text>Loading rewards...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  // Following is deprecated test data
   // Food rewards
-  const foodRewards = [
-    { id: 'food-1', name: 'Free Jerk Chicken', description: 'Traditional Jamaican jerk chicken', points: 100, category: 'food' },
-    { id: 'food-2', name: 'Free Curry Goat', description: 'Slow-cooked goat in rich curry', points: 150, category: 'food' },
-    { id: 'food-3', name: 'Free Escovitch Fish', description: 'Crispy fried fish with pickled vegetables', points: 120, category: 'food' },
-    { id: 'food-4', name: 'Free Ackee & Saltfish', description: 'Jamaican national dish', points: 180, category: 'food' },
-  ];
+  // const foodRewards = [
+  //   { id: 'food-1', name: 'Free Jerk Chicken', description: 'Traditional Jamaican jerk chicken', points: 100, category: 'food' },
+  //   { id: 'food-2', name: 'Free Curry Goat', description: 'Slow-cooked goat in rich curry', points: 150, category: 'food' },
+  //   { id: 'food-3', name: 'Free Escovitch Fish', description: 'Crispy fried fish with pickled vegetables', points: 120, category: 'food' },
+  //   { id: 'food-4', name: 'Free Ackee & Saltfish', description: 'Jamaican national dish', points: 180, category: 'food' },
+  // ];
 
-  // Merchandise rewards
-  const merchRewards = [
-    { id: 'merch-1', name: 'Caribbean Spice Set', description: 'Authentic Jamaican spices collection', points: 200, category: 'merch' },
-    { id: 'merch-2', name: 'Taste of Caribbean T-Shirt', description: 'Premium cotton t-shirt with logo', points: 250, category: 'merch' },
-    { id: 'merch-3', name: 'Recipe Book', description: 'Traditional Caribbean recipes', points: 300, category: 'merch' },
-    { id: 'merch-4', name: 'Caribbean Coffee Mug', description: 'Ceramic mug with island design', points: 80, category: 'merch' },
-  ];
+  // // Merchandise rewards
+  // const merchRewards = [
+  //   { id: 'merch-1', name: 'Caribbean Spice Set', description: 'Authentic Jamaican spices collection', points: 200, category: 'merch' },
+  //   { id: 'merch-2', name: 'Taste of Caribbean T-Shirt', description: 'Premium cotton t-shirt with logo', points: 250, category: 'merch' },
+  //   { id: 'merch-3', name: 'Recipe Book', description: 'Traditional Caribbean recipes', points: 300, category: 'merch' },
+  //   { id: 'merch-4', name: 'Caribbean Coffee Mug', description: 'Ceramic mug with island design', points: 80, category: 'merch' },
+  // ];
 
   // Handle reward redemption
   const handleRedeemReward = async (reward) => {
@@ -167,12 +184,9 @@ const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
         </Text>
 
         {activeSection === 'food' ?
-          foodRewards.map(renderRewardCard)
-          : merchRewards.map(renderRewardCard)
-
           // Takes actual items from the database thats in the rewardItems array
-          // rewardItems.filter(item => item.reward_type === 'food')
-          // : rewardItems.filter(item => item.reward_type === 'merch')
+          rewardItems.filter(item => item.reward_type === 'food').map(renderRewardCard)
+          : rewardItems.filter(item => item.reward_type === 'merch').map(renderRewardCard)
         }
       </ScrollView>
     </>
@@ -183,6 +197,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background.secondary,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     padding: SPACING.lg,
