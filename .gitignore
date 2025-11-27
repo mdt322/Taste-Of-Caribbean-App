@@ -11,7 +11,7 @@ server.env
 
 # API Configuration
 # src/utils/apiConfig.js
-server.docker-compose.yml
+# server/docker-compose.yml
 
 # Database
 *.sql
