@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'rea
 // import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import OrderHistory from './OrderHistory';
 import SettingsScreen from '../../screens/SettingsScreen';
+import MenuManagerModal from '../admin/MenuManagerModal';
 
 const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, onNavigate, statusMessage, isAdmin = false }) => {
     const [activeTab, setActiveTab] = useState('profile');
@@ -11,8 +12,27 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
     const [showRewards, setShowRewards] = useState(false);
     const [showPrivilegedOptions, setShowPrivilegedOptions] = useState(false);
     const [showManageMenu, setShowManageMenu] = useState(false);
+    const [isMenuManagerModalVisible, setIsMenuManagerModalVisible] = useState(false);
 
     // isAdmin is already destructured from props
+
+    const handleSaveMenuItem = (item, type) => {
+        console.log('Saving menu item:', item, type);
+        // Here you would typically save to your backend/database
+    };
+
+    const handleDeleteMenuItem = (itemId, type) => {
+        console.log('Deleting menu item:', itemId, type);
+        // Here you would typically delete from your backend/database
+    };
+
+    const openMenuManager = () => {
+        setIsMenuManagerModalVisible(true);
+    };
+
+    const closeMenuManager = () => {
+        setIsMenuManagerModalVisible(false);
+    };
 
     const setToRegister = () => {
         setAuthFlag(true);
@@ -166,7 +186,7 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={[styles.adminButton, styles.manageMenuButton]}
-                                        onPress={() => onNavigate('Admin')} // TODO: Change to 'ManageMenu' when that screen is created
+                                        onPress={openMenuManager}
                                     >
                                         <Text style={styles.adminButtonText}>Manage Menu</Text>
                                     </TouchableOpacity>
@@ -214,6 +234,15 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                         <View style={styles.bottomSpacing} />
                     </View>
                 </ScrollView>
+
+                {/* Menu Manager Modal */}
+                <MenuManagerModal
+                    visible={isMenuManagerModalVisible}
+                    onClose={closeMenuManager}
+                    user={user}
+                    onSaveItem={handleSaveMenuItem}
+                    onDeleteItem={handleDeleteMenuItem}
+                />
             </>
         );
     }

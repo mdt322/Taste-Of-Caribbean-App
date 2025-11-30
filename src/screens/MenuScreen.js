@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useMenu } from '../hooks/useMenu';
+import MenuManagerModal from '../components/admin/MenuManagerModal';
+import FloatingMenuButton from '../components/admin/FloatingMenuButton';
 
-const MenuScreen = ({ route, onAddToCart }) => {
+const MenuScreen = ({ route, onAddToCart, user }) => {
   // Get params from route if available
   const params = route?.params || {};
   const finalOnAddToCart = params.onAddToCart || onAddToCart;
+  const [isMenuManagerModalVisible, setIsMenuManagerModalVisible] = useState(false);
 
   const { menuItems, loading } = useMenu();
+
+  const handleSaveMenuItem = (item, type) => {
+    console.log('Saving menu item:', item, type);
+    // Here you would typically save to your backend/database
+  };
+
+  const handleDeleteMenuItem = (itemId, type) => {
+    console.log('Deleting menu item:', itemId, type);
+    // Here you would typically delete from your backend/database
+  };
+
+  const openMenuManager = () => {
+    setIsMenuManagerModalVisible(true);
+  };
+
+  const closeMenuManager = () => {
+    setIsMenuManagerModalVisible(false);
+  };
 
   const renderMenuItem = ({ item }) => (
     <TouchableOpacity style={styles.menuItem}>
@@ -52,6 +73,21 @@ const MenuScreen = ({ route, onAddToCart }) => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.menuList}
         showsVerticalScrollIndicator={false}
+      />
+      
+      {/* Floating Menu Manager Button - Admin Only */}
+      <FloatingMenuButton 
+        visible={user?.isAdmin} 
+        onPress={openMenuManager} 
+      />
+
+      {/* Menu Manager Modal */}
+      <MenuManagerModal
+        visible={isMenuManagerModalVisible}
+        onClose={closeMenuManager}
+        user={user}
+        onSaveItem={handleSaveMenuItem}
+        onDeleteItem={handleDeleteMenuItem}
       />
     </View>
   );

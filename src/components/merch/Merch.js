@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useMerch } from '../../hooks/useMerch';
+import MenuManagerModal from '../admin/MenuManagerModal';
+import FloatingMenuButton from '../admin/FloatingMenuButton';
 
-const Merch = ({ addToCart, setCartFlag, cart }) => {
+const Merch = ({ addToCart, setCartFlag, cart, user }) => {
     const { merchItems, loading, error } = useMerch();
+    const [isMenuManagerModalVisible, setIsMenuManagerModalVisible] = useState(false);
     // const [selectedCategory, setSelectedCategory] = useState('All');
 
     // Calculates total quantity of items in the cart to show in the button
     let totalQuantity = cart.reduce((prevQuantity, currentItem) => prevQuantity + currentItem.quantity, 0);
+
+    const handleSaveMenuItem = (item, type) => {
+        console.log('Saving merch item:', item, type);
+        // Here you would typically save to your backend/database
+    };
+
+    const handleDeleteMenuItem = (itemId, type) => {
+        console.log('Deleting merch item:', itemId, type);
+        // Here you would typically delete from your backend/database
+    };
+
+    const openMenuManager = () => {
+        setIsMenuManagerModalVisible(true);
+    };
+
+    const closeMenuManager = () => {
+        setIsMenuManagerModalVisible(false);
+    };
 
     if (loading) {
         return (
@@ -72,6 +93,21 @@ const Merch = ({ addToCart, setCartFlag, cart }) => {
                 keyExtractor={item => item.id}
                 numColumns={2}
                 contentContainerStyle={styles.merchList}
+            />
+
+            {/* Floating Menu Manager Button - Admin Only */}
+            <FloatingMenuButton 
+                visible={user?.isAdmin} 
+                onPress={openMenuManager} 
+            />
+
+            {/* Menu Manager Modal */}
+            <MenuManagerModal
+                visible={isMenuManagerModalVisible}
+                onClose={closeMenuManager}
+                user={user}
+                onSaveItem={handleSaveMenuItem}
+                onDeleteItem={handleDeleteMenuItem}
             />
         </>
     )

@@ -6,6 +6,7 @@ import AdminNavigator from './AdminNavigator';
 
 // Import screens
 import MenuScreen from '../screens/MenuScreen';
+import MerchScreen from '../screens/MerchScreen';
 import RewardsShop from '../components/rewards/Rewards';
 import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -40,6 +41,8 @@ function MainTabs({ user, cart, onAddToCart, onLogout, isAdmin = false }) {
 
             if (route.name === 'Menu') {
               iconName = focused ? 'restaurant' : 'restaurant-outline';
+            } else if (route.name === 'Merch') {
+              iconName = focused ? 'shirt' : 'shirt-outline';
             } else if (route.name === 'Rewards') {
               iconName = focused ? 'gift' : 'gift-outline';
             } else if (route.name === 'Cart') {
@@ -58,7 +61,12 @@ function MainTabs({ user, cart, onAddToCart, onLogout, isAdmin = false }) {
         <Tab.Screen
           name="Menu"
           component={MenuScreen}
-          initialParams={{ onAddToCart }}
+          initialParams={{ onAddToCart, user }}
+        />
+        <Tab.Screen
+          name="Merch"
+          component={MerchScreen}
+          initialParams={{ addToCart: onAddToCart, cart, user }}
         />
         <Tab.Screen
           name="Rewards"
