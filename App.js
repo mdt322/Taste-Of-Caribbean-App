@@ -9,8 +9,8 @@ import {
   Platform
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';  // Assuming you need this for icons elsewhere
+import { API_BASE_URL } from './src/utils/apiConfig';
 
 // Import components
 import Home from './src/components/home/Home';
@@ -31,7 +31,6 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [cartFlag, setCartFlag] = useState(false);
-  const API_BACKEND_URL = Constants.expoConfig.extra.REACT_APP_BACKEND_URL || 'http://localhost:5001';
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -69,7 +68,7 @@ const App = () => {
       // fire-and-forget: refund on server and update local user state when done
       (async () => {
         try {
-          const res = await fetch(`${API_BACKEND_URL}:5001/api/rewards/refund`, {
+          const res = await fetch(`${API_BASE_URL}/api/rewards/refund`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: String(user.email).trim().toLowerCase(), points: pointsToRefund })

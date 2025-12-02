@@ -34,6 +34,8 @@
 #   mysql_data:
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+version: '3.8'
+
 services:
   server:
     image: totc
@@ -41,12 +43,25 @@ services:
     build: .
     ports:
       - "5001:5000"
-    env_file:
-      - .env
-    restart: unless-stopped
-    networks:
-      - backend_network
+    environment:
+      # AWS RDS CONNECTION
+      DB_HOST: toc-dev.chaqko2e2i9g.us-east-1.rds.amazonaws.com
+      DB_NAME: totc
+      DB_USER: toc_dev
+      DB_PASS: toc2024!
+      DB_PORT: 3306
 
-networks:
-  backend_network:
-    driver: bridge
+      # SERVER
+      PORT: 5000
+      NODE_ENV: development
+
+      # BCRYPT
+      BCRYPT_SALT_ROUNDS: 10
+
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+    # Allows backend to restart if it crashes
+    restart: unless-stopped
+

@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { API_BASE_URL } from '../../utils/apiConfig';
 // import { saveOrder } from '../../utils/orderStorage';
 
 const STORE_LOCATION = {
@@ -249,7 +250,7 @@ const Checkout = ({ cart = [], subtotal = 0, tax = 0, deliveryFee = 0, total = 0
   const refundRewardPoints = async (item) => {
     if (item?.points && user?.email) {
       try {
-        const response = await fetch('http://localhost:5000/api/rewards/refund', {
+        const response = await fetch(`${API_BASE_URL}/api/rewards/refund`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: user.email, points: item.points })

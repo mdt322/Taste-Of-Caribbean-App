@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
+import { API_BASE_URL } from '../utils/apiConfig';
 
 const SettingsScreen = ({ user, onBack, onNavigation, toggleTheme, colors, theme }) => {
   const [showPasswordReset, setShowPasswordReset] = useState(false);
@@ -23,7 +24,6 @@ const SettingsScreen = ({ user, onBack, onNavigation, toggleTheme, colors, theme
       <PasswordResetScreen
         user={user}
         onBack={() => setShowPasswordReset(false)}
-        navigation={navigation}
         colors={colors}
         theme={theme}
       />
@@ -300,7 +300,7 @@ const SettingsScreen = ({ user, onBack, onNavigation, toggleTheme, colors, theme
   );
 };
 
-const PasswordResetScreen = ({ user, onBack, navigation, colors, theme }) => {
+const PasswordResetScreen = ({ user, onBack, colors, theme }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -342,7 +342,7 @@ const PasswordResetScreen = ({ user, onBack, navigation, colors, theme }) => {
         newPassword: newPassword,
       };
 
-      const response = await fetch('http://localhost:5001/api/password/change', {
+      const response = await fetch(`${API_BASE_URL}/api/password/change`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
