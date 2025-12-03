@@ -26,7 +26,7 @@ The app also currently enables privileged actions that can be performed by certa
 
 ## Getting Started
 
-*Visual studio used in the following steps
+*Visual studio and Node.js (version 20+) used in the following steps. Make sure to install those
 
 ### How to run the frontend
 
@@ -43,43 +43,36 @@ The app also currently enables privileged actions that can be performed by certa
 
 **Note:** There will be warnings about certain modules in package.json being outdated. If all options to fix any problems are exhausted, resort to updating those modules.
 
-### How to Run the Project: backend
+### How to run the backend
 
-1. Install Node.js v20+ from https://nodejs.org
-2. Install Docker Desktop from https://www.docker.com/products/docker-desktop
-3. Globally install Expo-CLI
+1. Install Docker Desktop from https://www.docker.com/products/docker-desktop
+2. Globally install Expo-CLI through a terminal/command prompt
    ```bash
    npm install -g expo-cli
    ```
-4. Navigate to the backend folder "server" and use each .example file to set up the environment for docker (database credentials go into .env, contact project manager)
-5. Run the following commands in the terminal with "server" as the current directory:
-
+3. Navigate to the backend folder "server" from the project's main directory then use the .env.example file to create a .env file to set up the environment for the docker (for db credentials, contact project manager)
+4. Open a terminal in the server folder and run the following to install dependencies:
+   ```bash
+   npm install
+   ```
+5. Edit the .env file in the project's root directory and make sure the field for REACT_APP_BACKEND_URL contains your current local ip address. It should look like this:
+   ```bash
+   REACT_APP_BACKEND_URL=http://(Your IP here):5001
+   ```
+   To view your current IP address, run the following in a command prompt window:
+   ```bash
+   ipconfig
+   ```
+7. Run the following commands in the terminal opened in the server directory:
    ```bash
    docker-compose down
    docker-compose up --build
    ```
 
-   **Note:** When testing the app through Expo Go on your mobile device, alter your .env in the main project directory and uncomment the entry for REACT_APP_BACKEND_URL Insert your backend's ip url where prompted.
-
-### Project Structure
-
-```
-/src
-  /assets         # Images and other static assets
-  /components     # UI components organized by feature
-    /auth         # Authentication components (Login, Register)
-    /checkout     # Checkout flow components
-    /menu         # Menu-related components
-    /rewards      # Rewards program components
-  /services       # External service integrations (Firebase)
-  /utils          # Utility functions and helpers
-  App.js          # Main application component
-  index.js        # Application entry point
-```
-
 ### Technologies Used
 
 - React Native / Expo
-- Firebase (Authentication, Database)
+- Firebase (Menu, Merchandise Database)
 - React Navigation
 - React Native Elements
+- MySQL (Accounts Backend)
