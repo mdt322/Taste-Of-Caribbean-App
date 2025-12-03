@@ -5,11 +5,13 @@ A food ordering app inspired by Caribbean cuisine.
 ## Project Overview
 
 The Taste of Caribbean mobile app is an interface built with React Native and Expo. Through the app, users to able to do the following:
+
 - Browse Caribbean dishes or restaurant merchandise, add those items to cart, and placing orders for delivery or pickup.
 - Log in or register for a dedicated account that is able to track their loyalty through a points system
 - Redeem said points to receive reward items that include items from the menu or merchandise catalogue.
 
 The app also currently enables privileged actions that can be performed by certain accounts, which includes:
+
 - Accessing a table showing the status of each dedicated account in the database.
 - Managing the contents of the menu, merchandise catalogue, and rewards shop content (FRONTEND INTERFACE DEMO COMPLETE, NO BACKEND SUPPORT)
 
@@ -26,7 +28,12 @@ The app also currently enables privileged actions that can be performed by certa
 
 ## Getting Started
 
-*Visual studio and Node.js (version 20+) used in the following steps. Make sure to install those
+The Following is used in the production of this app:
+
+- Visual Studio
+- Node.js (version 20+)
+- NPM (version 10+)
+- Expo CLI (version 6+)
 
 ### How to run the frontend
 
@@ -63,7 +70,7 @@ The app also currently enables privileged actions that can be performed by certa
    ```bash
    ipconfig
    ```
-7. Run the following commands in the terminal opened in the server directory:
+6. Start Docker Desktop then run the following commands in the terminal opened in the server directory:
    ```bash
    docker-compose down
    docker-compose up --build
