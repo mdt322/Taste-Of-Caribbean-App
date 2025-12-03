@@ -62,27 +62,53 @@ const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
       return;
     }
 
-    if (currentPoints < reward.points) {
-      Alert.alert('Insufficient Points', `You need ${reward.points} points to redeem ${reward.name}. You have ${currentPoints} points.`);
+    if (!user.email) {
+      Alert.alert('Error', 'User email not found. Please sign in again.');
+      return;
+    }
+
+    // Convert points to number if it's a string
+    const rewardPoints = typeof reward.points === 'string' 
+      ? parseInt(reward.points, 10) 
+      : reward.points;
+
+    if (!rewardPoints || typeof rewardPoints !== 'number' || isNaN(rewardPoints)) {
+      Alert.alert('Error', 'Invalid reward points value.');
+      console.error('Invalid reward points:', reward);
+      return;
+    }
+
+    if (currentPoints < rewardPoints) {
+      Alert.alert('Insufficient Points', `You need ${rewardPoints} points to redeem ${reward.name}. You have ${currentPoints} points.`);
       return;
     }
 
     // Try redeeming via server API. Adjust the base URL as needed for emulator/device.
     try {
+      const requestBody = { 
+        email: String(user.email).trim().toLowerCase(), 
+        points: rewardPoints 
+      };
+      console.log('Redeeming reward with:', requestBody);
+      
       const res = await fetch(`${API_BASE_URL}/api/rewards/redeem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, points: reward.points })
+        body: JSON.stringify(requestBody)
       });
 
       // Safely read response body: avoid throwing on empty/non-JSON responses
       const text = await res.text();
+      console.log('Server response status:', res.status);
+      console.log('Server response text:', text);
+      
       let json = null;
       if (text) {
         try {
           json = JSON.parse(text);
         } catch (e) {
           // ignore parse error and keep json as null
+          console.error('Failed to parse response:', e);
           json = null;
         }
       }
@@ -90,6 +116,7 @@ const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
       if (!res.ok) {
         // Server returned error (e.g., not enough points)
         const msg = (json && json.message) ? json.message : 'Unable to redeem points';
+        console.error('Redeem failed:', { status: res.status, message: msg, json });
         Alert.alert('Redeem failed', msg);
         return;
       }
@@ -100,20 +127,20 @@ const RewardsScreen = ({ user, onAddToCart, onUpdateRewards, cart = [] }) => {
         ? json.user.rewards
         : (json && typeof json.rewards === 'number')
           ? json.rewards
-          : (currentPoints - reward.points);
+          : (currentPoints - rewardPoints);
       if (onUpdateRewards) onUpdateRewards(newPoints);
 
-      // Add the redeemed reward to cart (client-side)
-      if (onAddToCart) onAddToCart({ ...reward, quantity: 1 });
+      // Add the redeemed reward to cart (client-side) with isReward flag and price set to 0
+      if (onAddToCart) onAddToCart({ ...reward, quantity: 1, isReward: true, price: 0, points: rewardPoints });
 
       Alert.alert('Item redeemed successfully', `${reward.name} added to cart!`);
     } catch (err) {
       console.error('Redeem error', err);
       // Fallback to client-only behavior if server unavailable
-      if (onAddToCart) onAddToCart({ ...reward, quantity: 1 });
+      if (onAddToCart) onAddToCart({ ...reward, quantity: 1, isReward: true, price: 0, points: rewardPoints });
       // Use friendly success message for offline case
       Alert.alert('Item redeemed successfully', `${reward.name} added to cart!`);
-      if (onUpdateRewards) onUpdateRewards(currentPoints - reward.points);
+      if (onUpdateRewards) onUpdateRewards(currentPoints - rewardPoints);
     }
   };
 

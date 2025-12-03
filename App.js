@@ -34,38 +34,85 @@ const App = () => {
 
   const addToCart = (item) => {
     setCart((prevCart) => {
-      let existing = prevCart.find((i) => i.id === item.id);
+      // Check for existing item, considering both id and isReward flag
+      let existing = prevCart.find((i) => 
+        i.id === item.id && i.isReward === item.isReward
+      );
       if (existing) {
-        return prevCart.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+        return prevCart.map((i) => 
+          (i.id === item.id && i.isReward === item.isReward) 
+            ? { ...i, quantity: i.quantity + 1 } 
+            : i
+        );
       }
       return [...prevCart, { ...item, quantity: 1 }];
     });
   };
 
   const updateQuantity = (itemId, change) => {
-    // Use current cart snapshot to determine if we're removing a reward item so we can refund points
-    const target = cart.find((i) => i.id === itemId);
+    // Find the first non-reward item with this id (regular menu items)
+    const target = cart.find((i) => i.id === itemId && !i.isReward);
+    
+    if (!target) return; // If no regular item found, don't update anything
+    
     const currentQty = target?.quantity || 0;
     const newQty = Math.max(0, currentQty + change);
     const willBeRemoved = target && newQty === 0;
 
-    // Update local cart immediately
+    // Update local cart immediately - only update the first non-reward item with this id
+    let updated = false;
     setCart((prevCart) =>
       prevCart
-        .map((item) =>
-          item.id === itemId
-            ? { ...item, quantity: Math.max(0, item.quantity + change) }
-            : item
-        )
+        .map((item) => {
+          // Only update the first non-reward item that matches the id
+          if (item.id === itemId && !item.isReward && !updated) {
+            updated = true;
+            return { ...item, quantity: Math.max(0, item.quantity + change) };
+          }
+          return item;
+        })
         // Removes items with quantity value of 0
         .filter((item) => item.quantity > 0)
     );
 
     // If a reward item is removed (user canceled redemption before checkout), refund points
-    if (willBeRemoved && target?.points && user?.email) {
+    if (willBeRemoved && target?.isReward && target?.points && user?.email) {
       // Calculate points to refund (points * quantity)
       const pointsToRefund = (target.quantity || 1) * (target.points || 0);
       // fire-and-forget: refund on server and update local user state when done
+      (async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/rewards/refund`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: String(user.email).trim().toLowerCase(), points: pointsToRefund })
+          });
+          const text = await res.text();
+          let json = null;
+          if (text) {
+            try { json = JSON.parse(text); } catch (e) { json = null; }
+          }
+          if (res.ok && json && json.user) {
+            setUser(prev => prev ? { ...prev, loyaltyPoints: json.user.rewards ?? (prev.loyaltyPoints || 0) } : prev);
+          }
+        } catch (err) {
+          console.error('Refund failed', err);
+        }
+      })();
+    }
+  };
+
+  const removeItem = (item) => {
+    // Remove specific item considering both id and isReward flag
+    setCart((prevCart) =>
+      prevCart.filter((cartItem) => 
+        !(cartItem.id === item.id && cartItem.isReward === item.isReward)
+      )
+    );
+
+    // If a reward item is removed, refund points
+    if (item?.isReward && item?.points && user?.email) {
+      const pointsToRefund = (item.quantity || 1) * (item.points || 0);
       (async () => {
         try {
           const res = await fetch(`${API_BASE_URL}/api/rewards/refund`, {
@@ -221,6 +268,12 @@ const App = () => {
           <RewardsScreen
             user={user}
             onAddToCart={addToCart}
+            onUpdateRewards={(newPoints) => {
+              setUser(prevUser => ({
+                ...prevUser,
+                loyaltyPoints: newPoints
+              }));
+            }}
             cart={cart}
           />
         );
@@ -282,7 +335,7 @@ const App = () => {
               total={calculateTotal().total}
               onIncrease={(id) => updateQuantity(id, 1)}
               onDecrease={(id) => updateQuantity(id, -1)}
-              onRemoval={(item) => updateQuantity(item.id, item.quantity * -1)}
+              onRemoval={(item) => removeItem(item)}
               onOrderComplete={handleOrderCompletion}
               user={user}
               navigation={{ navigate: (screen) => setActiveTab(screen) }}

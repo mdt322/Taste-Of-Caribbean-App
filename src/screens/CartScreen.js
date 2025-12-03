@@ -14,14 +14,17 @@ const CartScreen = ({
 }) => {
   // Calculate cart totals properly
   const subtotal = (cart || []).reduce((sum, item) => {
-    // Handle different item types: menu items with price, reward items with points
-    if (item?.points) {
-      // Reward items cost points, not money
+    // Handle different item types: menu items with price, reward items with isReward flag
+    if (item?.isReward) {
+      // Reward items cost 0 (already paid with points)
       return sum + 0;
     } else if (item?.price && typeof item.price === 'string') {
       // Menu items with price string like "$12.99"
       const price = parseFloat(item.price.replace('$', '')) || 0;
       return sum + price * (item.quantity || 1);
+    } else if (item?.price && typeof item.price === 'number') {
+      // Menu items with numeric price
+      return sum + item.price * (item.quantity || 1);
     }
     return sum;
   }, 0);

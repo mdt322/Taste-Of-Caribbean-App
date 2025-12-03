@@ -126,21 +126,23 @@ const Profile = ({ user, setAuthFlag, setAuthMode, onLogout, cart, onAddToCart, 
                         <View style={styles.pointsCard}>
                             <View style={styles.pointsHeader}>
                                 <Text style={styles.pointsTitle}>Loyalty Points</Text>
-                                <Text style={styles.pointsValue}>{user.loyaltyPoints}</Text>
+                                <Text style={styles.pointsValue}>{user.loyaltyPoints ?? 0}</Text>
                             </View>
                             <Text style={styles.pointsDescription}>
-                                Earn points with every order! 1 point per $1 spent.
+                                Earn 1 point for every $1 spent.
                             </Text>
                             <View style={styles.pointsProgress}>
                                 <View
                                     style={[
                                         styles.pointsProgressBar,
-                                        { width: `${Math.min((user.loyaltyPoints / 500) * 100, 100)}%` }
+                                        { width: `${Math.min(((user.loyaltyPoints ?? 0) / 500) * 100, 100)}%` }
                                     ]}
                                 />
                             </View>
                             <Text style={styles.pointsNextReward}>
-                                {500 - user.loyaltyPoints} points until your next free meal!
+                                {(user.loyaltyPoints ?? 0) >= 500
+                                    ? 'You have a reward available!'
+                                    : `${Math.max(500 - (user.loyaltyPoints ?? 0), 0)} points until your next free meal!`}
                             </Text>
                         </View>
 

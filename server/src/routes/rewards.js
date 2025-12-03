@@ -1,5 +1,5 @@
 import express from 'express';
-import { findUserByEmail, updateUserRewards, redeemUserRewards } from '../models/customer.js';
+import { findUserByEmail, updateUserRewards, redeemUserRewards, incrementUserRewards } from '../models/customer.js';
 
 const router = express.Router();
 

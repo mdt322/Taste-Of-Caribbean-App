@@ -17,8 +17,14 @@ const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, on
     <>
       <Text style={styles.title}>Order Summary</Text>
       <ScrollView style={styles.itemList}>
-        {items.map((item) => (
-          <View key={item.id} style={styles.item}>
+        {items.map((item) => {
+          const itemPrice = item.isReward ? 0 : (
+            typeof item.price === 'number' ? item.price : parseFloat((item.price || '0').replace('$', ''))
+          );
+          const totalPrice = itemPrice * item.quantity;
+          
+          return (
+          <View key={`${item.id}-${item.isReward ? 'reward' : 'regular'}`} style={styles.item}>
             <View style={styles.itemHeader}>
               <View style={styles.imageContainer}>
                 {item.imageUrl ? (
@@ -30,32 +36,46 @@ const OrderSummary = ({ items, subtotal, tax, deliveryFee, total, onIncrease, on
                 )}
               </View>
               <View style={styles.itemInfo}>
-                <Text style={styles.itemName}>{item.name}</Text>
+                <View style={styles.itemNameContainer}>
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  {item.isReward && (
+                    <View style={styles.rewardBadge}>
+                      <Text style={styles.rewardBadgeText}>REWARD</Text>
+                    </View>
+                  )}
+                </View>
                 <Text style={styles.itemQuantity}>Quantity: {item.quantity}</Text>
               </View>
               <Text style={styles.itemPrice}>
-                ${(typeof item.price === 'number' ? item.price * item.quantity : parseFloat((item.price || '0').replace('$', '')) * item.quantity).toFixed(2)}
+                ${totalPrice.toFixed(2)}
               </Text>
             </View>
             <View style={styles.itemFooter}>
-              <View style={styles.quantity}>
-                <TouchableOpacity onPress={() => onDecrease(item.id)} style={[styles.quantityButton, item.quantity === 1 && styles.quantityButtonDisabled]}>
-                  <Text style={[styles.quantityButtonText, item.quantity === 1 && styles.quantityButtonTextDisabled]}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.quantityText}>{item.quantity}</Text>
-                <TouchableOpacity onPress={() => onIncrease(item.id)} style={styles.quantityButton}>
-                  <Text style={styles.quantityButtonText}>+</Text>
-                </TouchableOpacity>
-              </View>
+              {!item.isReward ? (
+                <View style={styles.quantity}>
+                  <TouchableOpacity onPress={() => onDecrease(item.id)} style={[styles.quantityButton, item.quantity === 1 && styles.quantityButtonDisabled]}>
+                    <Text style={[styles.quantityButtonText, item.quantity === 1 && styles.quantityButtonTextDisabled]}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantityText}>{item.quantity}</Text>
+                  <TouchableOpacity onPress={() => onIncrease(item.id)} style={styles.quantityButton}>
+                    <Text style={styles.quantityButtonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={styles.rewardOnlyContainer}>
+                  <Text style={styles.rewardOnlyText}>Reward Item</Text>
+                </View>
+              )}
               <TouchableOpacity style={styles.removeButton} onPress={() => onRemoval(item)}>
                 <Text style={{ fontSize: 18, textAlign: 'center' }}>{'\u{1F5D1}'}</Text>
               </TouchableOpacity>
               <Text style={styles.itemUnitPrice}>
-                ${typeof item.price === 'number' ? item.price.toFixed(2) : (item.price || '0').replace('$', '')} each
+                ${itemPrice.toFixed(2)} each
               </Text>
             </View>
           </View>
-        ))}
+          );
+        })}
       </ScrollView>
 
       <View style={styles.summary}>
@@ -154,10 +174,26 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 16,
   },
+  itemNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  rewardBadge: {
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginLeft: 8,
+  },
+  rewardBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#000',
+  },
   itemName: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 4,
     color: '#2e8b57',
   },
   itemQuantity: {
@@ -180,6 +216,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f8f4',
     borderRadius: 20,
     paddingHorizontal: 8,
+  },
+  rewardOnlyContainer: {
+    backgroundColor: '#fff3cd',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  rewardOnlyText: {
+    fontSize: 14,
+    color: '#856404',
+    fontWeight: '600',
   },
   quantityButton: {
     padding: 8,
